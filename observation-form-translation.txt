@@ -1,23 +1,26 @@
-formulari për vëzhgimin e ditës së zgjedhjeve
-form for election day observation
+Formulari për vëzhgimin e ditës së zgjedhjeve
+Election day observation Form
+
+Zgjedhjet Lokale 2013
+Local Elections 2013
 
 Emri i Vëzhgues:
-Name of observer
+Name of observer:
 
 Nr. Vëzhgues:
-Observer number.
-Observer id?
+Observer number:
 
 Komuna:
 Commune:
 
 Emri i qendres:
-Name of Voting center
+Name of Voting center:
 
 Nr. Qen Vot:
-Number of Polling Station
+Number of Polling Station:
 
-GJATE ARRITJES
+
+GJATË ARRITJES
 DURING THE ARRIVAL OF THE VOTING MATERIAL
 
 1. A është larguar i gjithë materiali...
@@ -25,6 +28,7 @@ Any material left behind....
 
 2. A kanë qasje fizike në qendër
 Do they have physical access to the polling station
+
 
 PROCESI I VOTIMIT
 VOTING PROCESS
@@ -35,20 +39,20 @@ What time did the voting station opened?
 2. Cilët nga të përmendurit në vijim kanë vëzhguar procesin e votimit?
 Which of the following party members observed the voting process?
 
-Partitë tjera:
-Other Parties:
+	Partitë tjera:
+	Other Parties:
 
-OJQ
-NGO
+	OJQ
+	NGO
 
-Media
-Media
+	Media
+	Media
 
-Vëzhgues ndërkombëtar
-International Observers
+	Vëzhgues ndërkombëtar
+	International Observers
 
-Vëzhgues tjerë:
-Other Observers
+	Vëzhgues tjerë:
+	Other Observers
 
 3. Në hyrje, votuesit kontrol. me UV:
 At the entrance, voters were controlled. DU:
@@ -84,4 +88,61 @@ Did voters reject ballot
 If so, how many?
 
 Komment:
-Comments
+Comments:
+
+
+TË DHËNAT PËR ZGJEDHJET PËR ASAMBLE KOMUNALE
+DATA FOR MUNICIPAL ASSEMBLY ELECTIONS
+
+1. Nr. i përgj. i fletëvotimeve në kutinë e votimit
+Total number of ballots in the ballot box
+
+2. Sa fletv. të pavlef. kishte në kutinë e votimit?
+Number of invalid ballots in the ballot box?
+
+3. A u vendosën anash fletëvotimet e pavlef.?
+Ballots were set aside as invalid ballots?
+
+4. Pas num. të v. për AK, a u futën ato në thes.
+????????????
+
+
+TË DHËNAT PËR ZGJEDHJET PËR KRYETARË KOMUNASH
+DATA FOR MAYORAL ELECTIONS
+
+1. Numri i përgj. i fletëv. në kutinë e votimit
+Total number of ballots in the ballot box
+
+2. Sa fletëv. të pavlef. kishe në kut. e votimit?
+Number of invalid ballots in the ballot box?
+
+3. A u vendosësen anash fletëv. e pavlefshme?
+Ballots were set aside as invalid ballots?
+
+4. A u futën ato në një thes plastik transparent?
+Where the ballots put in a transparent plastic bag?
+
+	Fletëvotimet me kusht:
+	Ballots provided:
+
+	Numri i nënshkr. në listën e votimeve me kush:
+	?????
+
+	A janë numëruar zarfet e hapura ndaras...
+	?????
+
+
+PËRMBLEDHJE E NUMËRIMIT
+SUMMARY OF COUNTING
+
+1. A është vendimi mbi flv. e dyshimta i drejtë?
+
+2. Në rast mospajtimesh, a janë shënuar në libër?
+
+3. Kur ka përfunduar numërimi:
+
+4. A i ka kundër. ndonjë përfaqësues... rez.?
+
+	Nese po, kush:
+
+	Komente tjera:
