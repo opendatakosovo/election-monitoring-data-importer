@@ -28,12 +28,18 @@ def parse_csv():
 		
 		# Iterate through the rows, retrieve desired values.
 		for row in reader:
+			# POLLING STATION
 			polling_station_number = row[3] # Column name: nrQV
 			room_number = row[4] # Column name: NRVV
 			
-			commune = row[5]
-			polling_station_name = row[6]
+			commune = row[5] # Column name: Komuna
+			polling_station_name = row[6] # Column name: EQV
 			
+			# VOTING MATERIAL
+			material_left_behind = row[7] # Column name: 01gja
+			have_physical_access = row[8] # Column name: 02gja
+			
+			# VOTER INFORMATION
 			ultra_violet_control = row[45] # Column name: PV03UVL
 			identified_with_document = row[46] # Column name: PV04IDK
 			finger_sprayed = row[47] # Column name: PV05GSH
@@ -50,6 +56,10 @@ def parse_csv():
 					'roomNumber': room_number,
 					'name': polling_station_name,
 					'commune': commune
+				},
+				'votingMaterial':{
+					'materialLeftBehind': material_left_behind,
+					'havePhysicalAccess': have_physical_access
 				},
 				'votingProcess':{
 					'voters':{
