@@ -4,6 +4,10 @@
 	'name':'',
 	'commune':''
 },
+'votingMaterial':{
+	'materialLeftBehind':'YES',
+	'havePhysicalAccess':'NO'
+},
 'votingProcess':{
 	'openTime':'',
 	'observers:{

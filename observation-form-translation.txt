@@ -17,6 +17,15 @@ Name of Voting center
 Nr. Qen Vot:
 Number of Polling Station
 
+GJATE ARRITJES
+DURING THE ARRIVAL OF THE VOTING MATERIAL
+
+1. A është larguar i gjithë materiali...
+Any material left behind....
+
+2. A kanë qasje fizike në qendër
+Do they have physical access to the polling station
+
 PROCESI I VOTIMIT
 VOTING PROCESS
 
