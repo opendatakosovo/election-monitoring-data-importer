@@ -1,0 +1,78 @@
+formulari për vëzhgimin e ditës së zgjedhjeve
+form for election day observation
+
+Emri i Vëzhgues:
+Name of observer
+
+Nr. Vëzhgues:
+Observer number.
+Observer id?
+
+Komuna:
+Commune:
+
+Emri i qendres:
+Name of Voting center
+
+Nr. Qen Vot:
+Number of Polling Station
+
+PROCESI I VOTIMIT
+VOTING PROCESS
+
+1. Kur u hap vendvotimi?
+What time did the voting station opened?
+
+2. Cilët nga të përmendurit në vijim kanë vëzhguar procesin e votimit?
+Which of the following party members observed the voting process?
+
+Partitë tjera:
+Other Parties:
+
+OJQ
+NGO
+
+Media
+Media
+
+Vëzhgues ndërkombëtar
+International Observers
+
+Vëzhgues tjerë:
+Other Observers
+
+3. Në hyrje, votuesit kontrol. me UV:
+At the entrance, voters were controlled. DU:
+
+4. Votuesit identif. me do. ne LV
+Voter identified with document
+
+5. Votuesit i bëhet gishti me sprej:
+Voter's finger was sprayed
+
+6. Votuesit i vuloset fletëvotimi
+Voter sealed ballot
+
+7. Sa votues kanë votuar deri në orën
+How many voters have voted at
+
+8. Nr. i vt. që nuk e kanë gjetur emrin në LV?
+Number of voters who didn't find the name on the Voting List?
+
+9. Nr. votuesve me kusht?
+Number of condition voters?
+
+10. Nr. votuesve me asistencë?
+Number of voter assistance
+
+11. Të pranishëm së paku tre anëtarë të KVV?
+At least three members of KVV were present?
+
+12. A ka refuzuar ndonjë votues fletëvotimin?
+Did voters reject ballot
+
+12. Nëse po sa?
+If so, how many?
+
+Komment:
+Comments
