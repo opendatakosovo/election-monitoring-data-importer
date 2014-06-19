@@ -1,6 +1,7 @@
 import csv
 
 from pymongo import MongoClient
+from bson import ObjectId
 
 csv_filename = 'kdi-local-elections-observations-first-round-2013.csv'
 
@@ -8,11 +9,11 @@ csv_filename = 'kdi-local-elections-observations-first-round-2013.csv'
 client = MongoClient()
 
 # Get database and collection
-db = client.localelections2013
-collection = db.kdifirstroundobservations
+db = client.kdi
+collection = db.localelectionsfirstround2013
 
 # Clear data
-db.kdifirstroundobservations.remove({})
+collection.remove({})
 
 def parse_csv():
 	'''
@@ -70,6 +71,7 @@ def parse_csv():
 			#FIXME: Translate mutlti-choice values to english (e.g. Gjithmone to Always)
 			
 			observation = {
+				'_id': str(ObjectId()),
 				'pollingStation':{
 					'number': polling_station_number,
 					'roomNumber': room_number,
