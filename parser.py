@@ -124,34 +124,41 @@ def parse_csv():
 					'havePhysicalAccess': have_physical_access
 				},
 
-				'arrivalTime':{
-					'Arrival_Time': arrival_time,
-					'Voting_materials_placed_in_out_voting_station':{
-					'How_to_vote_info': how_to_vote_info,
-					'List_of_Candidates': list_of_candidates, 
-					'When_Preparation_start': when_preparation_start,
-					'Number_KVV_memebers': number_KVV_members, 
-					'Female': female, 
+				'arrivalTime':
+				{
+					
+
+				'arrivalTime': arrival_time,
+					'votingMaterialsPlacedInAndOutVotingStation':{
+					'howToVoteInfo': how_to_vote_info,
+					'listOfCandidates': list_of_candidates, 
+					'whenPreparationStarts': when_preparation_start,
+					'numberOfKvvMebers': number_KVV_members, 
+					'female': female, 
 					},
-				'Was_Necessary_Material_Missing':{
-					'UV_Lamp': UV_lamp, 
-					'Spray': spray, 
-					'Voters_List': voters_list,
-					'Ballots': ballots,	
-					'Stamp': stamp,
-					'Ballot_Box': ballot_box,
-					'Voters_Book': voters_book,
-					'Voting_Cabin': voting_cabin, 
-					'Envelops_Condition_Voters': envelops_condition_voters,
+				'wasNecessaryMaterialMissing':{
+					'uvLamp': UV_lamp, 
+					'spray': spray, 
+					'votersList': voters_list,
+					'ballots': ballots,	
+					'stamp': stamp,
+					'ballotBox': ballot_box,
+					'votersBook': voters_book,
+					'votingCabin': voting_cabin, 
+					'envelopsForConditionVoters': envelops_condition_voters,
 					},
-				'Number_of_Accepted_Ballots': number_of_accepted_ballots, 
-				'Number_of_voters_in_voting_station_list':number_of_voters_in_voting_station_list,
-				'Number_of_voting_cabins':number_of_voting_cabins,
-				'Votingbox_shown_empty': votingbox_shown_empty,
-				'Closed_with_safetystrip': closed_with_safetystrip, 
-				'Did_they_register_serial_number_of_strips': did_they_register_serial_number_of_strips, 
-				'Cabins_provided_voters_safety_and_privancy': cabins_provided_voters_safety_and_privancy
-				},
+				'numberOfAcceptedBallots': number_of_accepted_ballots, 
+				'numberOfVotersInVotingStationList':number_of_voters_in_voting_station_list,
+				'numberOfVotingCabins':number_of_voting_cabins,
+				'votingBoxShownAsEmpty': votingbox_shown_empty,
+				'closedWithSafetyStrip': closed_with_safetystrip, 
+				'didTheyRegisterSerialNumberOfStrips': did_they_register_serial_number_of_strips, 
+				'cabinsProvidedToVotersSafetyAndPrivancy': cabins_provided_voters_safety_and_privancy,
+
+			
+			},
+
+
 				'votingProcess':{
 					'voters':{
 						'ultraVioletControl': ultra_violet_control,
