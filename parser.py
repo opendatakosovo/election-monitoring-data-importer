@@ -36,6 +36,32 @@ def parse_csv():
 			commune = row[5] # Column name: Komuna
 			polling_station_name = row[6] # Column name: EQV
 			
+			# ARRIVAL TIME
+			arrival_time = row[9] # column name: P01KA
+			how_to_vote_info = row[10] # column name: P02A
+			list_of_candidates = row[11] # column name: P02B
+			when_preparation_start = row[12] # column name:P03Perg
+			number_KVV_members = row[13] #column name:P04KVV
+			female = row[14] #column name:P04Fem
+			UV_lamp = row[15] #column name:P05Lla
+			spray = row[16] # column name:P05Ngj
+			voters_list = row[17] # column name:P05Lis
+			ballots = row[18] # column name:P05Flv	
+			stamp = row[19] # column name:P05Vul
+			ballot_box = row[20] # column name:P05Kut
+			voters_book = row[21] # column name:P05Lib
+			voting_cabin = row[22] # column name:P05Kab
+			envelops_condition_voters = row[23] # column name:P05ZFK
+			number_of_accepted_ballots = row[24] # column name:P06NFP
+			number_of_voters_in_voting_station_list = row[25] # column name: P07VNL
+			number_of_voting_cabins=row[26] # column name:P08NKV
+			votingbox_shown_empty=row[27] # column name:P09TKZ
+			closed_with_safetystrip = row[28] # column name:P10SHS
+			did_they_register_serial_number_of_strips = row[29] # column name:P11NRS
+			cabins_provided_voters_safety_and_privancy = row[30] # column name:P12KFV
+
+	
+
 			# VOTING MATERIAL
 			material_left_behind = row[7] # Column name: 01gja
 			have_physical_access = row[8] # Column name: 02gja
@@ -97,6 +123,38 @@ def parse_csv():
 					'materialLeftBehind': material_left_behind,
 					'havePhysicalAccess': have_physical_access
 				},
+
+
+				'Arrival_Time': arrival_time,
+					'Voting_materials_placed_in_out_voting_station':{
+					'How_to_vote_info': how_to_vote_info,
+					'List_of_Candidates': list_of_candidates, 
+					'When_Preparation_start': when_preparation_start,
+					'Number_KVV_memebers': number_KVV_members, 
+					'Female': female, 
+					},
+				'Was_Necessary_Material_Missing':{
+					'UV_Lamp': UV_lamp, 
+					'Spray': spray, 
+					'Voters_List': voters_list,
+					'Ballots': ballots,	
+					'Stamp': stamp,
+					'Ballot_Box': ballot_box,
+					'Voters_Book': voters_book,
+					'Voting_Cabin': voting_cabin, 
+					'Envelops_Condition_Voters': envelops_condition_voters,
+					},
+				'Number_of_Accepted_Ballots': number_of_accepted_ballots, 
+				'Number_of_voters_in_voting_station_list':number_of_voters_in_voting_station_list,
+				'Number_of_voting_cabins':number_of_voting_cabins,
+				'Votingbox_shown_empty': votingbox_shown_empty,
+				'Closed_with_safetystrip': closed_with_safetystrip, 
+				'Did_they_register_serial_number_of_strips': did_they_register_serial_number_of_strips, 
+				'Cabins_provided_voters_safety_and_privancy': cabins_provided_voters_safety_and_privancy,
+
+			
+			},
+
 				'votingProcess':{
 					'voters':{
 						'ultraVioletControl': ultra_violet_control,
