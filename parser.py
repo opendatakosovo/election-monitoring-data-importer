@@ -132,7 +132,7 @@ def parse_csv():
 					'When_Preparation_start': when_preparation_start,
 					'Number_KVV_memebers': number_KVV_members, 
 					'Female': female, 
-					}
+					},
 				'Was_Necessary_Material_Missing':{
 					'UV_Lamp': UV_lamp, 
 					'Spray': spray, 
@@ -143,7 +143,7 @@ def parse_csv():
 					'Voters_Book': voters_book,
 					'Voting_Cabin': voting_cabin, 
 					'Envelops_Condition_Voters': envelops_condition_voters,
-					}
+					},
 				'Number_of_Accepted_Ballots': number_of_accepted_ballots, 
 				'Number_of_voters_in_voting_station_list':number_of_voters_in_voting_station_list,
 				'Number_of_voting_cabins':number_of_voting_cabins,
