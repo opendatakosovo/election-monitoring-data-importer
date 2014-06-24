@@ -90,6 +90,46 @@ If so, how many?
 Komment:
 Comments:
 
+PARREGULLSITE DHE ANKESAT
+IRREGULARITY AND COMPLAINTS
+
+1.Tentim të votoj më shumë se një herë:
+Attempt to vote more than once
+
+2...Ta fotografoj fletevotimin
+..To take a picture of the ballot
+
+3.Ka futur më shumë së një fletev. në kuti?
+Has inserted more than one ballot in the box?
+
+4.Persona të paautoriz. kanë qëndruar në vv?
+Unauthorized persons stayed at the voting center?
+
+5.Ka pasur dhunë apo kërcënime në vv?
+Had violence or threats in the voting center?
+
+6.Ka pasur propagandë politike brenda vv?
+Had politic propaganda inside the voting center?
+
+7.Më shumë se 1 person prapa kabinës...
+More than 1 person behind the cabin..
+
+8.A është mbyllur ndonjëherë vendvotimi
+Has the voting center been closed in any case 
+
+9.A ka raste të votimit jashtë kabinave:
+Is there any case of voting outside the cabin.
+
+10.Sa votues janë ankuar gjatë procesit
+How many voters complained during the process
+
+11.Sa votues e kanë mbushur formën e anketës
+How many voters filled the complains form
+
+12.A ka pasur incident gjatë proc.zgj.
+Did any accident happened during the elections process.
+
+
 
 TË DHËNAT PËR ZGJEDHJET PËR ASAMBLE KOMUNALE
 DATA FOR MUNICIPAL ASSEMBLY ELECTIONS

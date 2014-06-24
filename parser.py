@@ -51,6 +51,21 @@ def parse_csv():
 			how_many_voted_by_four_PM = row[51] # Column name: PV07-16
 			how_many_voted_by_seven_PM = row[52] # Column name: PV07-19
 			
+			# IRREGULARITY AND COMPLAINTS
+			attempt_to_vote_moreThanOnce=row[60] #Column name: PA01x1
+			allowed_to_vote=row[61] #Column name: PA01ifPO
+			take_picture_ofballot=row[62] #Column name: PA02Fot
+			inserted_more_than_one_ballot_in_the_box=row[63] #Column name: PA03M1F
+			unauthorized_persons_stayed_at_the_voting_station=row[64] #Column name: PA04PPD
+			violence_in_the_voting_station=row[65] #Column name: PA05DHU
+			politic_propaganda_inside_the_voting_station=row[66] #Column name: PA06PRP
+			more_than_one_person_behind_the_cabin=row[67] #Column name: PA07M1P
+			has_the_voting_station_been_closed_in_any_case=row[68] #Column name: PA08MBV
+			case_voting_outside_the_cabin=row[69] #Column name: PA09VJK
+			how_many_voters_complained_during_the_process=row[70] #Column name: PA10VAV
+			how_many_voters_filled_the_complaints_form=row[71] #Column name: PA11VMF
+			any_accident_happened_during_the_process=row[72] #Column name: PA12PAA	
+			
 			# BALLOTS - MUNICIPAL ASSEMBLY ELECTIONS
 			total_ballots_mae = row[101] # PAK01
 			invalid_ballots_in_box_mae = row[102] # PAK02
@@ -95,6 +110,21 @@ def parse_csv():
 							'sevenPM': how_many_voted_by_seven_PM
 						}
 					}
+				},
+				'irregularityAndComplaints':{
+					'attemptToVoteMoreThanOnce':attempt_to_vote_moreThanOnce,
+					'allowedToVote':allowed_to_vote,
+					'takePictureOfBallot':take_picture_ofballot,
+					'insertedMoreThanOneBallotInTheBox':inserted_more_than_one_ballot_in_the_box,
+					'unauthorizedPersonsStayedAtTheVotingStation':unauthorized_persons_stayed_at_the_voting_station,
+					'violenceInTheVotingStation':violence_in_the_voting_station,
+					'politicPropagandaInsideTheVotingStation':politic_propaganda_inside_the_voting_station,
+					'moreThanOnePersonBehindTheCabin':more_than_one_person_behind_the_cabin,
+					'hasTheVotingStationBeenClosedInAnyCase':has_the_voting_station_been_closed_in_any_case,
+					'caseVotingOutsideTheCabin':case_voting_outside_the_cabin,
+					'howManyVotersComplainedDuringTheProcess':how_many_voters_complained_during_the_process,
+					'howManyVotersFilledTheComplaintsForm':how_many_voters_filled_the_complaints_form,
+					'anyAccidentHappenedDuringTheProcess':any_accident_happened_during_the_process
 				},
 				'ballots':{
 					'municipalAssembly':{
