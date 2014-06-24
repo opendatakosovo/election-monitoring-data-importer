@@ -125,7 +125,7 @@ def parse_csv():
 				},
 
 				'arrivalTime':{
-				'Arrival_Time': arrival_time,
+					'Arrival_Time': arrival_time,
 					'Voting_materials_placed_in_out_voting_station':{
 					'How_to_vote_info': how_to_vote_info,
 					'List_of_Candidates': list_of_candidates, 
@@ -150,9 +150,7 @@ def parse_csv():
 				'Votingbox_shown_empty': votingbox_shown_empty,
 				'Closed_with_safetystrip': closed_with_safetystrip, 
 				'Did_they_register_serial_number_of_strips': did_they_register_serial_number_of_strips, 
-				'Cabins_provided_voters_safety_and_privancy': cabins_provided_voters_safety_and_privancy,
-
-			
+				'Cabins_provided_voters_safety_and_privancy': cabins_provided_voters_safety_and_privancy
 				},
 				'votingProcess':{
 					'voters':{
