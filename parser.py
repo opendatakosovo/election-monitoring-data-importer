@@ -153,8 +153,7 @@ def parse_csv():
 				'Cabins_provided_voters_safety_and_privancy': cabins_provided_voters_safety_and_privancy,
 
 			
-			},
-
+				},
 				'votingProcess':{
 					'voters':{
 						'ultraVioletControl': ultra_violet_control,
