@@ -119,24 +119,22 @@ def parse_csv():
 					'name': polling_station_name,
 					'commune': commune
 				},
-				'votingMaterial':{
+				'onArrival':{
 					'materialLeftBehind': material_left_behind,
 					'havePhysicalAccess': have_physical_access
 				},
-
-				'arrivalTime':
-				{
-					
-
-				'arrivalTime': arrival_time,
+				'preparation':{
+					'arrivalTime': arrival_time,
 					'votingMaterialsPlacedInAndOutVotingStation':{
-					'howToVoteInfo': how_to_vote_info,
-					'listOfCandidates': list_of_candidates, 
-					'whenPreparationStarts': when_preparation_start,
-					'numberOfKvvMebers': number_KVV_members, 
-					'female': female, 
+						'howToVoteInfo': how_to_vote_info,
+						'listOfCandidates': list_of_candidates, 
+						'whenPreparationStarted': when_preparation_start,
+						'kvvMembers':{
+							'total':number_KVV_members, 
+							'female': female 
+						}
 					},
-				'wasNecessaryMaterialMissing':{
+				'missingMaterial':{
 					'uvLamp': UV_lamp, 
 					'spray': spray, 
 					'votersList': voters_list,
@@ -146,19 +144,15 @@ def parse_csv():
 					'votersBook': voters_book,
 					'votingCabin': voting_cabin, 
 					'envelopsForConditionVoters': envelops_condition_voters,
-					},
+				},
 				'numberOfAcceptedBallots': number_of_accepted_ballots, 
 				'numberOfVotersInVotingStationList':number_of_voters_in_voting_station_list,
 				'numberOfVotingCabins':number_of_voting_cabins,
 				'votingBoxShownAsEmpty': votingbox_shown_empty,
 				'closedWithSafetyStrip': closed_with_safetystrip, 
-				'didTheyRegisterSerialNumberOfStrips': did_they_register_serial_number_of_strips, 
-				'cabinsProvidedToVotersSafetyAndPrivancy': cabins_provided_voters_safety_and_privancy,
-
-			
-			},
-
-
+				'stripsRegistered': did_they_register_serial_number_of_strips, 
+				'cabinsSafetyAndPrivacy': cabins_provided_voters_safety_and_privancy,
+				},
 				'votingProcess':{
 					'voters':{
 						'ultraVioletControl': ultra_violet_control,
@@ -173,20 +167,22 @@ def parse_csv():
 						}
 					}
 				},
-				'irregularityAndComplaints':{
+				'irregularities':{
 					'attemptToVoteMoreThanOnce':attempt_to_vote_moreThanOnce,
 					'allowedToVote':allowed_to_vote,
-					'takePictureOfBallot':take_picture_ofballot,
-					'insertedMoreThanOneBallotInTheBox':inserted_more_than_one_ballot_in_the_box,
+					'photographedBallot':take_picture_ofballot,
+					'insertedMoreThanOneBallot':inserted_more_than_one_ballot_in_the_box,
 					'unauthorizedPersonsStayedAtTheVotingStation':unauthorized_persons_stayed_at_the_voting_station,
 					'violenceInTheVotingStation':violence_in_the_voting_station,
-					'politicPropagandaInsideTheVotingStation':politic_propaganda_inside_the_voting_station,
+					'politicalPropagandaInsideTheVotingStation':politic_propaganda_inside_the_voting_station,
 					'moreThanOnePersonBehindTheCabin':more_than_one_person_behind_the_cabin,
 					'hasTheVotingStationBeenClosedInAnyCase':has_the_voting_station_been_closed_in_any_case,
 					'caseVotingOutsideTheCabin':case_voting_outside_the_cabin,
-					'howManyVotersComplainedDuringTheProcess':how_many_voters_complained_during_the_process,
-					'howManyVotersFilledTheComplaintsForm':how_many_voters_filled_the_complaints_form,
 					'anyAccidentHappenedDuringTheProcess':any_accident_happened_during_the_process
+				},					
+				'complaints':{
+					'total':how_many_voters_complained_during_the_process,
+					'filed':how_many_voters_filled_the_complaints_form,	
 				},
 				'ballots':{
 					'municipalAssembly':{
