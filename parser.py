@@ -30,7 +30,7 @@ def parse_csv():
 		# Iterate through the rows, retrieve desired values.
 		for row in reader:
 			# POLLING STATION
-			polling_station_number = row[3] # Column name: nrQV
+			polling_station_number = row[3].lower() # Column name: nrQV
 			room_number = row[4] # Column name: NRVV
 			
 			commune = row[5] # Column name: Komuna
