@@ -120,8 +120,8 @@ def parse_csv():
 					'commune': commune
 				},
 				'onArrival':{
-					'materialLeftBehind': material_left_behind,
-					'havePhysicalAccess': have_physical_access
+					'materialLeftBehind': to_boolean(material_left_behind),
+					'havePhysicalAccess': to_boolean(have_physical_access)
 				},
 				'preparation':{
 					'arrivalTime': arrival_time,
@@ -135,75 +135,104 @@ def parse_csv():
 						}
 					},
 				'missingMaterial':{
-					'uvLamp': UV_lamp, 
-					'spray': spray, 
-					'votersList': voters_list,
-					'ballots': ballots,	
-					'stamp': stamp,
-					'ballotBox': ballot_box,
-					'votersBook': voters_book,
-					'votingCabin': voting_cabin, 
-					'envelopsForConditionVoters': envelops_condition_voters,
+					'uvLamp': to_boolean(UV_lamp), 
+					'spray':to_boolean( spray), 
+					'votersList': to_boolean(voters_list),
+					'ballots': to_boolean(ballots),	
+					'stamp': to_boolean(stamp),
+					'ballotBox':to_boolean(ballot_box),
+					'votersBook': to_boolean(voters_book),
+					'votingCabin': to_boolean(voting_cabin), 
+					'envelopsForConditionVoters': to_boolean(envelops_condition_voters),
 				},
-				'numberOfAcceptedBallots': number_of_accepted_ballots, 
-				'numberOfVotersInVotingStationList':number_of_voters_in_voting_station_list,
-				'numberOfVotingCabins':number_of_voting_cabins,
-				'votingBoxShownAsEmpty': votingbox_shown_empty,
-				'closedWithSafetyStrip': closed_with_safetystrip, 
+				'numberOfAcceptedBallots': to_num(number_of_accepted_ballots), 
+				'numberOfVotersInVotingStationList':to_num(number_of_voters_in_voting_station_list),
+				'numberOfVotingCabins':to_num(number_of_voting_cabins),
+				'votingBoxShownAsEmpty': to_boolean(votingbox_shown_empty),
+				'closedWithSafetyStrip':to_boolean( closed_with_safetystrip), 
 				'stripsRegistered': did_they_register_serial_number_of_strips, 
-				'cabinsSafetyAndPrivacy': cabins_provided_voters_safety_and_privancy,
+				'cabinsSafetyAndPrivacy': to_boolean(cabins_provided_voters_safety_and_privancy),
 				},
 				'votingProcess':{
 					'voters':{
 						'ultraVioletControl': ultra_violet_control,
 						'identifiedWithDocument': identified_with_document,
 						'fingerSprayed': finger_sprayed,
-						'sealedBallot': sealed_ballot,
+						'sealedBallot': to_num(sealed_ballot),
 						'howManyVotedBy':{
-							'tenAM': how_many_voted_by_ten_AM,
-							'onePM': how_many_voted_by_one_PM,
-							'fourPM': how_many_voted_by_four_PM,
-							'sevenPM': how_many_voted_by_seven_PM
+							'tenAM': to_num(how_many_voted_by_ten_AM),
+							'onePM': to_num(how_many_voted_by_one_PM),
+							'fourPM': to_num(how_many_voted_by_four_PM),
+							'sevenPM': to_num(how_many_voted_by_seven_PM)
 						}
 					}
 				},
 				'irregularities':{
-					'attemptToVoteMoreThanOnce':attempt_to_vote_moreThanOnce,
-					'allowedToVote':allowed_to_vote,
-					'photographedBallot':take_picture_ofballot,
-					'insertedMoreThanOneBallot':inserted_more_than_one_ballot_in_the_box,
-					'unauthorizedPersonsStayedAtTheVotingStation':unauthorized_persons_stayed_at_the_voting_station,
-					'violenceInTheVotingStation':violence_in_the_voting_station,
-					'politicalPropagandaInsideTheVotingStation':politic_propaganda_inside_the_voting_station,
-					'moreThanOnePersonBehindTheCabin':more_than_one_person_behind_the_cabin,
-					'hasTheVotingStationBeenClosedInAnyCase':has_the_voting_station_been_closed_in_any_case,
-					'caseVotingOutsideTheCabin':case_voting_outside_the_cabin,
-					'anyAccidentHappenedDuringTheProcess':any_accident_happened_during_the_process
+					'attemptToVoteMoreThanOnce':to_boolean(attempt_to_vote_moreThanOnce),
+					'allowedToVote':to_boolean(allowed_to_vote),
+					'photographedBallot':to_boolean(take_picture_ofballot),
+					'insertedMoreThanOneBallot':to_boolean(inserted_more_than_one_ballot_in_the_box),
+				 	'unauthorizedPersonsStayedAtTheVotingStation':to_boolean(unauthorized_persons_stayed_at_the_voting_station),
+					'violenceInTheVotingStation':to_boolean(violence_in_the_voting_station),
+					'politicalPropagandaInsideTheVotingStation':to_boolean(politic_propaganda_inside_the_voting_station),
+					'moreThanOnePersonBehindTheCabin':to_boolean(more_than_one_person_behind_the_cabin),
+					'hasTheVotingStationBeenClosedInAnyCase':to_boolean(has_the_voting_station_been_closed_in_any_case),
+					'caseVotingOutsideTheCabin':to_num(case_voting_outside_the_cabin),
+					'anyAccidentHappenedDuringTheProcess':to_boolean(any_accident_happened_during_the_process)
 				},					
 				'complaints':{
-					'total':how_many_voters_complained_during_the_process,
-					'filed':how_many_voters_filled_the_complaints_form,	
+					'total':to_num(how_many_voters_complained_during_the_process),
+					'filed':how_many_voters_filled_the_complaints_form	
 				},
 				'ballots':{
 					'municipalAssembly':{
-						'total': total_ballots_mae,
+						'total': to_num(total_ballots_mae),
 						'invalid':{
-							'inBallotBox': invalid_ballots_in_box_mae,
-							'setAside': ballots_set_aside_mae
+							'inBallotBox': to_boolean(invalid_ballots_in_box_mae),
+							'setAside': to_num(ballots_set_aside_mae)
 						}
 					},
 					'mayoral':{
-						'total': total_ballots_me,
+						'total': to_num(total_ballots_me),
 						'invalid':{
-							'inBallotBox': invalid_ballots_in_box_me,
-							'setAside': ballots_set_aside_me
+							'inBallotBox': to_num(invalid_ballots_in_box_me),
+							'setAside': to_boolean(ballots_set_aside_me)
 						},
-						'putInTransparentBag': bollots_put_in_transaparent_bag
+						'putInTransparentBag': to_boolean(bollots_put_in_transaparent_bag)
 					}
 				}
-			}
+			} 
 			
 			# Insert document
 			collection.insert(observation)
+
+def to_boolean(arg):
+	''' Converting string to boolean
+	:param arg: string argument to convert to boolean 
+	'''
+	if arg == "PO" or arg == "TRUE":
+		return True
+	elif arg == "JO" or arg == "FALSE":
+		return False 
+	else:
+		return arg
+		
+
+def to_num(s):
+	''' Converting string to integer
+	:param arg: string argument to convert to integer
+	'''
+	try:
+		return int(s)
+	except ValueError:
+		try:
+			return float(s)
+		except:
+			return s
+      
+   
+
+
+
 
 parse_csv()	
