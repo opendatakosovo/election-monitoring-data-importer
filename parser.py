@@ -126,12 +126,12 @@ def parse_csv():
 				'preparation':{
 					'arrivalTime': arrival_time,
 					'votingMaterialsPlacedInAndOutVotingStation':{
-						'howToVoteInfo': how_to_vote_info,
-						'listOfCandidates': list_of_candidates, 
+						'howToVoteInfo': to_boolean(how_to_vote_info),
+						'listOfCandidates': to_boolean(list_of_candidates), 
 						'whenPreparationStarted': when_preparation_start,
 						'kvvMembers':{
-							'total':number_KVV_members, 
-							'female': female 
+							'total': to_num(number_KVV_members), 
+							'female': to_num(female) 
 						}
 					},
 				'missingMaterial':{
@@ -150,14 +150,14 @@ def parse_csv():
 				'numberOfVotingCabins':to_num(number_of_voting_cabins),
 				'votingBoxShownAsEmpty': to_boolean(votingbox_shown_empty),
 				'closedWithSafetyStrip':to_boolean( closed_with_safetystrip), 
-				'stripsRegistered': did_they_register_serial_number_of_strips, 
+				'registeredStrips': to_boolean(did_they_register_serial_number_of_strips), 
 				'cabinsSafetyAndPrivacy': to_boolean(cabins_provided_voters_safety_and_privancy),
 				},
 				'votingProcess':{
 					'voters':{
-						'ultraVioletControl': ultra_violet_control,
-						'identifiedWithDocument': identified_with_document,
-						'fingerSprayed': finger_sprayed,
+						'ultraVioletControl': translate_frequency(ultra_violet_control),
+						'identifiedWithDocument': translate_frequency(identified_with_document),
+						'fingerSprayed': translate_frequency(finger_sprayed),
 						'sealedBallot': to_num(sealed_ballot),
 						'howManyVotedBy':{
 							'tenAM': to_num(how_many_voted_by_ten_AM),
@@ -182,14 +182,14 @@ def parse_csv():
 				},					
 				'complaints':{
 					'total':to_num(how_many_voters_complained_during_the_process),
-					'filed':how_many_voters_filled_the_complaints_form	
+					'filed':how_many_voters_filled_the_complaints_form	#FIXME: This is meant to be a number but instead it's a frequency term.
 				},
 				'ballots':{
 					'municipalAssembly':{
 						'total': to_num(total_ballots_mae),
 						'invalid':{
-							'inBallotBox': to_boolean(invalid_ballots_in_box_mae),
-							'setAside': to_num(ballots_set_aside_mae)
+							'inBallotBox': to_num(invalid_ballots_in_box_mae),
+							'setAside': to_boolean(ballots_set_aside_mae)
 						}
 					},
 					'mayoral':{
@@ -231,8 +231,16 @@ def to_num(s):
 			return s
       
    
-
-
+def translate_frequency(term):
+	''' Translate frequence term into english. e.g. 'Gjithmone' is 'always'
+	'''
+	# Use startswith because we don't want to deal with encoding issues (e umlaut).
+	# There is probably a more elegant way to deal with this.
+	if term.startswith('Gjithmon'):
+		return 'always'
+	else:
+		return term
+	#TODO: Cover the other terms
 
 
 parse_csv()	
