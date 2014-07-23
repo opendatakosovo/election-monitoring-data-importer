@@ -2,6 +2,7 @@ import csv
 
 from pymongo import MongoClient
 from bson import ObjectId
+from utils import Utils
 
 csv_filename = 'kdi-local-elections-observations-first-round-2013.csv'
 
@@ -23,7 +24,6 @@ def parse_csv():
 	'''
 	with open(csv_filename, 'rb') as csvfile:
 		reader = csv.reader(csvfile)
-		
 		# Skip the header
 		next(reader, None)
 		
@@ -110,7 +110,7 @@ def parse_csv():
 			#FIXME: When dealing with numbers, set in document as int instead of string.
 			#FIXME: Translate PO/YO to True/False boolean values.
 			#FIXME: Translate mutlti-choice values to english (e.g. Gjithmone to Always)
-			
+			util = Utils()
 			observation = {
 				'_id': str(ObjectId()),
 				'pollingStation':{
@@ -120,127 +120,90 @@ def parse_csv():
 					'commune': commune
 				},
 				'onArrival':{
-					'materialLeftBehind': to_boolean(material_left_behind),
-					'havePhysicalAccess': to_boolean(have_physical_access)
+					'materialLeftBehind': util.to_boolean(material_left_behind),
+					'havePhysicalAccess': util.to_boolean(have_physical_access)
 				},
 				'preparation':{
 					'arrivalTime': arrival_time,
 					'votingMaterialsPlacedInAndOutVotingStation':{
-						'howToVoteInfo': to_boolean(how_to_vote_info),
-						'listOfCandidates': to_boolean(list_of_candidates), 
+						'howToVoteInfo': util.to_boolean(how_to_vote_info),
+						'listOfCandidates': util.to_boolean(list_of_candidates), 
 						'whenPreparationStarted': when_preparation_start,
 						'kvvMembers':{
-							'total': to_num(number_KVV_members), 
-							'female': to_num(female) 
+							'total': util.to_num(number_KVV_members), 
+							'female': util.to_num(female) 
 						}
 					},
 				'missingMaterial':{
-					'uvLamp': to_boolean(UV_lamp), 
-					'spray':to_boolean( spray), 
-					'votersList': to_boolean(voters_list),
-					'ballots': to_boolean(ballots),	
-					'stamp': to_boolean(stamp),
-					'ballotBox':to_boolean(ballot_box),
-					'votersBook': to_boolean(voters_book),
-					'votingCabin': to_boolean(voting_cabin), 
-					'envelopsForConditionVoters': to_boolean(envelops_condition_voters),
+					'uvLamp': util.to_boolean(UV_lamp), 
+					'spray':util.to_boolean( spray), 
+					'votersList': util.to_boolean(voters_list),
+					'ballots': util.to_boolean(ballots),	
+					'stamp': util.to_boolean(stamp),
+					'ballotBox':util.to_boolean(ballot_box),
+					'votersBook': util.to_boolean(voters_book),
+					'votingCabin': util.to_boolean(voting_cabin), 
+					'envelopsForConditionVoters': util.to_boolean(envelops_condition_voters),
 				},
-				'numberOfAcceptedBallots': to_num(number_of_accepted_ballots), 
-				'numberOfVotersInVotingStationList':to_num(number_of_voters_in_voting_station_list),
-				'numberOfVotingCabins':to_num(number_of_voting_cabins),
-				'votingBoxShownAsEmpty': to_boolean(votingbox_shown_empty),
-				'closedWithSafetyStrip':to_boolean( closed_with_safetystrip), 
-				'registeredStrips': to_boolean(did_they_register_serial_number_of_strips), 
-				'cabinsSafetyAndPrivacy': to_boolean(cabins_provided_voters_safety_and_privancy),
+				'numberOfAcceptedBallots': util.to_num(number_of_accepted_ballots), 
+				'numberOfVotersInVotingStationList':util.to_num(number_of_voters_in_voting_station_list),
+				'numberOfVotingCabins':util.to_num(number_of_voting_cabins),
+				'votingBoxShownAsEmpty': util.to_boolean(votingbox_shown_empty),
+				'closedWithSafetyStrip':util.to_boolean( closed_with_safetystrip), 
+				'registeredStrips': util.to_boolean(did_they_register_serial_number_of_strips), 
+				'cabinsSafetyAndPrivacy': util.to_boolean(cabins_provided_voters_safety_and_privancy),
 				},
 				'votingProcess':{
 					'voters':{
-						'ultraVioletControl': translate_frequency(ultra_violet_control),
-						'identifiedWithDocument': translate_frequency(identified_with_document),
-						'fingerSprayed': translate_frequency(finger_sprayed),
-						'sealedBallot': to_num(sealed_ballot),
+						'ultraVioletControl': util.translate_frequency(ultra_violet_control),
+						'identifiedWithDocument': util.translate_frequency(identified_with_document),
+						'fingerSprayed': util.translate_frequency(finger_sprayed),
+						'sealedBallot': util.to_num(sealed_ballot),
 						'howManyVotedBy':{
-							'tenAM': to_num(how_many_voted_by_ten_AM),
-							'onePM': to_num(how_many_voted_by_one_PM),
-							'fourPM': to_num(how_many_voted_by_four_PM),
-							'sevenPM': to_num(how_many_voted_by_seven_PM)
+							'tenAM': util.to_num(how_many_voted_by_ten_AM),
+							'onePM': util.to_num(how_many_voted_by_one_PM),
+							'fourPM': util.to_num(how_many_voted_by_four_PM),
+							'sevenPM': util.to_num(how_many_voted_by_seven_PM)
 						}
 					}
 				},
 				'irregularities':{
-					'attemptToVoteMoreThanOnce':to_boolean(attempt_to_vote_moreThanOnce),
-					'allowedToVote':to_boolean(allowed_to_vote),
-					'photographedBallot':to_boolean(take_picture_ofballot),
-					'insertedMoreThanOneBallot':to_boolean(inserted_more_than_one_ballot_in_the_box),
-				 	'unauthorizedPersonsStayedAtTheVotingStation':to_boolean(unauthorized_persons_stayed_at_the_voting_station),
-					'violenceInTheVotingStation':to_boolean(violence_in_the_voting_station),
-					'politicalPropagandaInsideTheVotingStation':to_boolean(politic_propaganda_inside_the_voting_station),
-					'moreThanOnePersonBehindTheCabin':to_boolean(more_than_one_person_behind_the_cabin),
-					'hasTheVotingStationBeenClosedInAnyCase':to_boolean(has_the_voting_station_been_closed_in_any_case),
-					'caseVotingOutsideTheCabin':to_num(case_voting_outside_the_cabin),
-					'anyAccidentHappenedDuringTheProcess':to_boolean(any_accident_happened_during_the_process)
+					'attemptToVoteMoreThanOnce':util.to_boolean(attempt_to_vote_moreThanOnce),
+					'allowedToVote':util.to_boolean(allowed_to_vote),
+					'photographedBallot':util.to_boolean(take_picture_ofballot),
+					'insertedMoreThanOneBallot':util.to_boolean(inserted_more_than_one_ballot_in_the_box),
+				 	'unauthorizedPersonsStayedAtTheVotingStation':util.to_boolean(unauthorized_persons_stayed_at_the_voting_station),
+					'violenceInTheVotingStation':util.to_boolean(violence_in_the_voting_station),
+					'politicalPropagandaInsideTheVotingStation':util.to_boolean(politic_propaganda_inside_the_voting_station),
+					'moreThanOnePersonBehindTheCabin':util.to_boolean(more_than_one_person_behind_the_cabin),
+					'hasTheVotingStationBeenClosedInAnyCase':util.to_boolean(has_the_voting_station_been_closed_in_any_case),
+					'caseVotingOutsideTheCabin':util.to_num(case_voting_outside_the_cabin),
+					'anyAccidentHappenedDuringTheProcess':util.to_boolean(any_accident_happened_during_the_process)
 				},					
 				'complaints':{
-					'total':to_num(how_many_voters_complained_during_the_process),
+					'total':util.to_num(how_many_voters_complained_during_the_process),
 					'filed':how_many_voters_filled_the_complaints_form	#FIXME: This is meant to be a number but instead it's a frequency term.
 				},
 				'ballots':{
 					'municipalAssembly':{
-						'total': to_num(total_ballots_mae),
+						'total': util.to_num(total_ballots_mae),
 						'invalid':{
-							'inBallotBox': to_num(invalid_ballots_in_box_mae),
-							'setAside': to_boolean(ballots_set_aside_mae)
+							'inBallotBox': util.to_num(invalid_ballots_in_box_mae),
+							'setAside': util.to_boolean(ballots_set_aside_mae)
 						}
 					},
 					'mayoral':{
-						'total': to_num(total_ballots_me),
+						'total': util.to_num(total_ballots_me),
 						'invalid':{
-							'inBallotBox': to_num(invalid_ballots_in_box_me),
-							'setAside': to_boolean(ballots_set_aside_me)
+							'inBallotBox': util.to_num(invalid_ballots_in_box_me),
+							'setAside': util.to_boolean(ballots_set_aside_me)
 						},
-						'putInTransparentBag': to_boolean(bollots_put_in_transaparent_bag)
+						'putInTransparentBag': util.to_boolean(bollots_put_in_transaparent_bag)
 					}
 				}
 			} 
 			
 			# Insert document
 			collection.insert(observation)
-
-def to_boolean(arg):
-	''' Converting string to boolean
-	:param arg: string argument to convert to boolean 
-	'''
-	if arg == "PO" or arg == "TRUE":
-		return True
-	elif arg == "JO" or arg == "FALSE":
-		return False 
-	else:
-		return arg
-		
-
-def to_num(s):
-	''' Converting string to integer
-	:param arg: string argument to convert to integer
-	'''
-	try:
-		return int(s)
-	except ValueError:
-		try:
-			return float(s)
-		except:
-			return s
-      
-   
-def translate_frequency(term):
-	''' Translate frequence term into english. e.g. 'Gjithmone' is 'always'
-	'''
-	# Use startswith because we don't want to deal with encoding issues (e umlaut).
-	# There is probably a more elegant way to deal with this.
-	if term.startswith('Gjithmon'):
-		return 'always'
-	else:
-		return term
-	#TODO: Cover the other terms
-
 
 parse_csv()	
