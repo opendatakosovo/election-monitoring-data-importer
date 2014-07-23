@@ -12,8 +12,7 @@ class Utils(object):
 		elif arg == "JO" or arg == "FALSE":
 			return False 
 		else:
-			return arg
-			
+			return arg		
 
 	def to_num(self, s):
 		''' Converting string to integer
@@ -26,7 +25,6 @@ class Utils(object):
 				return float(s)
 			except:
 				return s
-	      
 	   
 	def translate_frequency(self, term):
 		''' Translate frequence term into english. e.g. 'Gjithmone' is 'always'
