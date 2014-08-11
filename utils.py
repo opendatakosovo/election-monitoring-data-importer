@@ -1,3 +1,5 @@
+from slugify import slugify
+
 class Utils(object):
 
 	def __init__(self):
@@ -35,4 +37,11 @@ class Utils(object):
 			return 'always'
 		else:
 			return term
+
+
+	def slugify(self, slug):
+		
+		return slugify(slug)
+
+
 		#TODO: Cover the other terms
