@@ -117,9 +117,9 @@ def parse_csv():
 					'number': polling_station_number,
 					'roomNumber': room_number,
 					'name': polling_station_name,
-					'slugName': util.slugify(polling_station_name),
+					'nameSlug': util.slugify(polling_station_name),
 					'commune': commune,
-					'slugCommune':util.slugify(commune)
+					'communeSlug':util.slugify(commune)
 				},
 				'onArrival':{
 					'materialLeftBehind': util.to_boolean(material_left_behind),

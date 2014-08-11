@@ -4,7 +4,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.~lock.kdi-local-elections-observations-first-round-2013.csv#
 # Distribution / packaging
 .Python
 env/
