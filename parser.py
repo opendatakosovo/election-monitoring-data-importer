@@ -92,18 +92,60 @@ def parse_csv():
 			how_many_voters_filled_the_complaints_form=row[71] #Column name: PA11VMF
 			any_accident_happened_during_the_process=row[72] #Column name: PA12PAA	
 			
+			# TIME OF VOTES COUNTING PROCESS	
+			when_voting_process_finished = row[73] #Column name PM01PPV
+			anyone_waiting_when_polling_station_closed = row[74] #column name PM02PJA
+			did_they_allow_them_to_vote = row[75] #column name PM03LVT
+			when_counting_process_started = row[76] #column name M04NUM
+			pdk_observers = row[77] #column name PM05-PDK	
+			ldk_observers = row[78] #column name PM05-LDK
+			lvv_observers = row[79] #column name PM05-LVV	
+			aak_observers = row[80] #column name PM05-AAK
+			akr_observers = row[81] #column name PM05-AKR
+			other_parties_observers_1 = row[82] #column name PM05-TJ1
+			other_parties_observers_2 = row[83] #column name PM05-TJ2
+			other_parties_observers_3 = row[84] #column name PM05-TJ3
+			ngo_observers = row[85] #column name PM05-OJQ
+			media_observers = row[86] #column name PM05-MED
+			international_observers = row[87] #column name PM05-VZH
+			other_observers = row[88] #column name PM05-TJE
+			any_unauthorized_person_while_counting = row[89] #column name PM06PPA
+			who_were_these_unauthorized_persons = row[90] #column name PM06KUSH
+			did_they_have_nice_view_in_procedures = row[91] #column name PM07VSH
+			did_they_control_safety_strip_before_opening_box = row[92] #column name PM08SHS
+			safety_strips_untouched = row[93] #column name PM09SS
+			did_they_count_and_register_signitures_in_voting_book = row[94] #column name PM10NEN
+			whats_number_of_voters_in_that_polling_station = row[95] #column name PM11NVL
+			number_of_signatures_in_voters_list = row[96] #column name PM12NSH
+			did_they_count_and_register_unused_ballots = row[97] #column name PM13FVP
+			did_they_count_and_register_used_ballots = row[98] #column name PM14PSH
+			did_they_verify_and_register_safety_strips = row[99] #column name PM15VSS
+			voting_materials_set_aside = row[100] #column name PM16ANA
+			
 			# BALLOTS - MUNICIPAL ASSEMBLY ELECTIONS
 			total_ballots_mae = row[101] # PAK01
 			invalid_ballots_in_box_mae = row[102] # PAK02
 			ballots_set_aside_mae = row[103] # PAK03
-			# something = row[104] # PAK04
+			after_counting_did_they_put_votes_in_the_bag = row[104] # PAK04
 				
 			# BALLOTS - MAYOR ELECTIONS
 			total_ballots_me = row[105] # PKK01
 			invalid_ballots_in_box_me = row[106] # PKK02
 			ballots_set_aside_me = row[107] # PKK03
 			bollots_put_in_transaparent_bag = row[108] # PKK04
+			condition_ballots = row[109]
+			number_of_signitures_in_condtion_voting_list = row[110]
+			did_they_count_envelopes_separatly = row[111]	
 			
+			# Counting process summary		
+			right_decision_for_doubtful_ballots = row[112]
+			are_the_disagreements_recorded_in_the_book = row[113]
+			when_counting_process_finished = row[114]
+			was_anyone_against_the_results = rwo[115]
+			who_was_against_results = row[116]
+			other_comments = row[117]
+			additional_comments = row[134]
+
 			# TODO: Figure out if invalid_ballots_in_box_xxx and ballots_set_aside_xxx are redundant.
 			# If invalid_ballots_in_box_xxx and ballots_set_aside_xxx refer to the same thing then we only need to count (invalid_ballots_in_box_xxx) and not the flag (ballots_set_aside_xxx)
 			
@@ -186,6 +228,39 @@ def parse_csv():
 					'total':util.to_num(how_many_voters_complained_during_the_process),
 					'filed':how_many_voters_filled_the_complaints_form	#FIXME: This is meant to be a number but instead it's a frequency term.
 				},
+
+				'countingProcess':{	
+						'whenVotingProcessFinished':when_voting_process_finished,
+						'anyoneWaitingWhenPollingStationClosed':anyone_waiting_when_polling_station_closed,
+						'didTheyAllowThemToVote':did_they_allow_them_to_vote,
+						'whenCountingProcessStarted':when_counting_process_started,
+						'observers':{
+							'pdkObservers':pdk_observers,	
+							'ldkObservers':ldk_observers, 
+							'lvvObservers':lvv_observers,
+							'aakObservers':aak_observers,
+							'akrObservers':akr_observers,
+							'otherPartiesObserversFirst':other_parties_observers_1,
+							'otherPartiesObserversSecond':other_parties_observers_2,
+							'otherPartiesObserversThird':other_parties_observers_3,
+							'ngoObservers':ngo_observers,
+							'mediaObservers':media_observers,
+							'internationalObservers':international_observers,
+							'otherObservers':other_observers
+							},
+						'anyUnauthorizedPersonWhileCountingVotes':any_unauthorized_person_while_counting,
+						'whoWereTheseUnauthorizedPersons':who_were_these_unauthorized_persons,
+						'didTheyHaveNiceViewInProcedures':did_they_have_nice_view_in_procedures,
+						'didTheyControlSafetyStripBeforeOpeningBox':did_they_control_safety_strip_before_opening_box,
+						'safetyStripsUntouched':safety_strips_untouched,
+						'didTheyCountAndRegisterSignaturesInVotingBook':did_they_count_and_register_signitures_in_voting_book,
+						'whatIsTheNumberOfVotersInPollingStation':whats_number_of_voters_in_that_polling_station,
+						'numberOfSignaturesInVotersList':number_of_signatures_in_voters_list,
+						'didTheyCountAndRegisterUnusedBallots':did_they_count_and_register_unused_ballots,
+						'didTheyCountAndRegisterUsedBallots':did_they_count_and_register_used_ballots,
+						'didTheyVerifyAndRegisterSafetyStrip':did_they_verify_and_register_safety_strips,
+						'votingMaterialsSetAside':voting_materials_set_aside
+					},
 				'ballots':{
 					'municipalAssembly':{
 						'total': util.to_num(total_ballots_mae),
@@ -200,9 +275,21 @@ def parse_csv():
 							'inBallotBox': util.to_num(invalid_ballots_in_box_me),
 							'setAside': util.to_boolean(ballots_set_aside_me)
 						},
-						'putInTransparentBag': util.to_boolean(bollots_put_in_transaparent_bag)
+						'putInTransparentBag': util.to_boolean(bollots_put_in_transaparent_bag),
+						'conditionBallots':condition_ballots,
+						'numberOfSignaturesInConditionVotingList':number_of_signitures_in_condtion_voting_list,
+						'didTheyCountEnvelopesSeparatly':did_they_count_envelopes_separatly
 					}
-				}
+				},
+				'countingProcessSummary': {		
+					'rightDecisionForDouptfulBallots':right_decision_for_doubtful_ballots,
+					'areTheDisagreementsRecordedInTheBook':are_the_disagreements_recorded_in_the_book,
+					'whenCountingProcessFinished':when_counting_process_finished,
+					'wasAnyoneAgainstTheResults':was_anyone_against_the_results,
+					'whoWasAgainstResults':who_was_against_results,
+					'otherComents':other_comments,
+					'aditionalComments':additional_comments
+					}
 			} 
 			
 			# Insert document
