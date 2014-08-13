@@ -32,76 +32,76 @@ Do they have physical access to the polling station
 ####  Ora 06:00-07:00  #### 
 time  06:00-07:00
 
-1. Koha e arritjes	row[9]
+1. Koha e arritjes	
 arrival time
 
  2. Ajane vendosur matrialet ne vijim brenda dhe jasht votimi?
 are the voting materials placed in and outside the voting station?
 
-	a.  Informata si votohet				row[10] 
+	a.  Informata si votohet				 
 	How-to-vote information ?
 
-	b. Lista e kandidateve nga secili subjekt politik?	row[	]
+	b. Lista e kandidateve nga secili subjekt politik?	
 	list of candidates from each political party?
 
-5.Kur filluan pergaditjet ne vendvotim?				row[12]
+5.Kur filluan pergaditjet ne vendvotim?				
  when did the preparation of voting station start?
 
-6.Numri i anetareve te KVV-se?					row[13]
+6.Numri i anetareve te KVV-se?					
 Number of the KVV members?
 
-6.1 femra?							row[14]
+6.1 femra?							
 female:
 
 7. A ka munguar ndonje material i nevojshem ne vendvotim?	
 was any necessary material missing?
 
-7.1 llampa ultravilet						row[15]
+7.1 llampa ultravilet						
 UV lamp 
 
-7.2	ngjyr a e padukshme					row[16]
+7.2	ngjyr a e padukshme					
  invisible color(spray)
 
-7.3 Lista e votuesve						row[17]
+7.3 Lista e votuesve						
 voters list 
 
-7.4 Fletvotimi 							row[18]
+7.4 Fletvotimi 							
 ballot
 
-7.5 vula							row[19]
+7.5 vula							
 stamp
 
-7.6 Kutia e votimit						row[20]
+7.6 Kutia e votimit						
 ballot box
 
-7.7  libri votimit						row[21]
+7.7  libri votimit						
 voters book
 
-7.8 kabina e votimit						row[22]
+7.8 kabina e votimit						
 voting cabin 
 
-7.9 Zarfet e fletvotimeve me kusht 				row[23]
+7.9 Zarfet e fletvotimeve me kusht 				
 envelops of the condition voters
 
-8. Numri i fletvotimeve te pranuara				row[24]
+8. Numri i fletvotimeve te pranuara				
 number of the accepted ballots
 
-9. Numri i votuesve ne liste ne vendvotim			row[25]
+9. Numri i votuesve ne liste ne vendvotim			
 number of the voters in the voting station list
  
-10. Numri i kabinave per votim					row[26]		
+10. Numri i kabinave per votim						
 number of the voting cabins
 
-11. A eshte treguar kutia e zbrazet				row[27]
+11. A eshte treguar kutia e zbrazet				
 has the voting box shown as empty
 
-12. Ajane mbyllur.... me shirita te sigurise		row[28]
+12. Ajane mbyllur.... me shirita te sigurise		
 Did they close... with safety strip.
 
-13. A jane regjistruar numrat serik te rripave		row[29]
+13. A jane regjistruar numrat serik te rripave		
 did they register the serial number of strips
 
-14. A jane vendosur kabinat...siguria dhe fshehtesia e votuesve 	row[30]
+14. A jane vendosur kabinat...siguria dhe fshehtesia e votuesve 	
 are the cabins placed...provided with enough voters safety and privancy  
 
 

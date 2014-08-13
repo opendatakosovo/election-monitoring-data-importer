@@ -235,30 +235,34 @@ def parse_csv():
 						'didTheyAllowThemToVote':did_they_allow_them_to_vote,
 						'whenCountingProcessStarted':when_counting_process_started,
 						'observers':{
-							'pdkObservers':pdk_observers,	
-							'ldkObservers':ldk_observers, 
-							'lvvObservers':lvv_observers,
-							'aakObservers':aak_observers,
-							'akrObservers':akr_observers,
-							'otherPartiesObserversFirst':other_parties_observers_1,
-							'otherPartiesObserversSecond':other_parties_observers_2,
-							'otherPartiesObserversThird':other_parties_observers_3,
-							'ngoObservers':ngo_observers,
-							'mediaObservers':media_observers,
-							'internationalObservers':international_observers,
-							'otherObservers':other_observers
+							'pdk':pdk_observers,	
+							'ldk':ldk_observers, 
+							'lvv':lvv_observers,
+							'aak':aak_observers,
+							'akr':akr_observers,
+							'othersParties':{
+								'first': other_parties_observers_1,
+								'second': other_parties_observers_2,
+								'third': other_parties_observers_3,
 							},
-						'anyUnauthorizedPersonWhileCountingVotes':any_unauthorized_person_while_counting,
-						'whoWereTheseUnauthorizedPersons':who_were_these_unauthorized_persons,
-						'didTheyHaveNiceViewInProcedures':did_they_have_nice_view_in_procedures,
-						'didTheyControlSafetyStripBeforeOpeningBox':did_they_control_safety_strip_before_opening_box,
+							'ngo': ngo_observers,
+							'media': media_observers,
+							'international': international_observers,
+							'other': other_observers
+						},
+						'unauthorizedPersons':{
+							'present': any_unauthorized_person_while_counting,
+							'who': who_were_these_unauthorized_persons
+						},
+						'didTheyHaveNiceViewInProcedures':did_they_have_nice_view_in_procedures, #FIXME: Who is they? Put they in their own obect.
+						'didTheyControlSafetyStripBeforeOpeningBox':did_they_control_safety_strip_before_opening_box,#FIXME: Who is they? 
 						'safetyStripsUntouched':safety_strips_untouched,
-						'didTheyCountAndRegisterSignaturesInVotersList':did_they_count_and_register_signitures_in_voters_list,
+						'didTheyCountAndRegisterSignaturesInVotersList':did_they_count_and_register_signitures_in_voters_list, #FIXME: Who is they? 
 						'whatIsTheNumberOfVotersInPollingStation':whats_number_of_voters_in_that_polling_station,
 						'numberOfSignaturesInVotersList':number_of_signatures_in_voters_list,
-						'didTheyCountAndRegisterUnusedBallots':did_they_count_and_register_unused_ballots,
-						'didTheyCountAndRegisterUsedBallots':did_they_count_and_register_used_ballots,
-						'didTheyVerifyAndRegisterSafetyStrip':did_they_verify_and_register_safety_strips,
+						'didTheyCountAndRegisterUnusedBallots':did_they_count_and_register_unused_ballots, #FIXME: Who is they? 
+						'didTheyCountAndRegisterUsedBallots':did_they_count_and_register_used_ballots, #FIXME: Who is they? 
+						'didTheyVerifyAndRegisterSafetyStrip':did_they_verify_and_register_safety_strips, #FIXME: Who is they? 
 						'votingMaterialsSetAside':voting_materials_set_aside
 					},
 				'ballots':{
@@ -282,15 +286,16 @@ def parse_csv():
 						'didTheyCountEnvelopesSeparatly':did_they_count_envelopes_separatly
 					}
 				},
-				'countingProcessSummary': {		
-					'rightDecisionForDouptfulBallots':right_decision_for_doubtful_ballots,
-					'areTheDisagreementsRecordedInTheBook':are_the_disagreements_recorded_in_the_book,
-					'whenCountingProcessFinished':when_counting_process_finished,
-					'wasAnyoneAgainstTheResults':was_anyone_against_the_results,
-					'whoWasAgainstResults':who_was_against_results,
-					'otherComents':other_comments,
-					'aditionalComments':additional_comments
-					}
+				'countingProcessSummary': {
+					'doubtfulBallotsProperlyHandled':right_decision_for_doubtful_ballots,
+					'disgreementsRecorded':are_the_disagreements_recorded_in_the_book,
+					'countingProcessFinishTime':when_counting_process_finished,
+					'oppositions':{
+						'anyoneOpposed': was_anyone_against_the_results,
+						'who': who_was_against_results
+					},
+					'comments':other_comments
+				}
 			} 
 			
 			# Insert document
