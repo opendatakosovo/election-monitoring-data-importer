@@ -114,7 +114,7 @@ def parse_csv():
 			did_they_have_nice_view_in_procedures = row[91] #column name PM07VSH
 			did_they_control_safety_strip_before_opening_box = row[92] #column name PM08SHS
 			safety_strips_untouched = row[93] #column name PM09SS
-			did_they_count_and_register_signitures_in_voting_book = row[94] #column name PM10NEN
+			did_they_count_and_register_signitures_in_voters_list = row[94] #column name PM10NEN
 			whats_number_of_voters_in_that_polling_station = row[95] #column name PM11NVL
 			number_of_signatures_in_voters_list = row[96] #column name PM12NSH
 			did_they_count_and_register_unused_ballots = row[97] #column name PM13FVP
@@ -133,18 +133,18 @@ def parse_csv():
 			invalid_ballots_in_box_me = row[106] # PKK02
 			ballots_set_aside_me = row[107] # PKK03
 			bollots_put_in_transaparent_bag = row[108] # PKK04
-			condition_ballots = row[109]
-			number_of_signitures_in_condtion_voting_list = row[110]
-			did_they_count_envelopes_separatly = row[111]	
+			condition_ballots = row[109]	#VK00
+			number_of_signitures_in_condtion_voting_list = row[110]	#VK01
+			did_they_count_envelopes_separatly = row[111]	#VK02
 			
 			# Counting process summary		
-			right_decision_for_doubtful_ballots = row[112]
-			are_the_disagreements_recorded_in_the_book = row[113]
-			when_counting_process_finished = row[114]
-			was_anyone_against_the_results = rwo[115]
-			who_was_against_results = row[116]
-			other_comments = row[117]
-			additional_comments = row[134]
+			right_decision_for_doubtful_ballots = row[112]	#PNR01
+			are_the_disagreements_recorded_in_the_book = row[113]	#PNR02
+			when_counting_process_finished = row[114]	#PNR03
+			was_anyone_against_the_results = row[115]	#PNR04
+			who_was_against_results = row[116]	#PNR04Kush
+			other_comments = row[117]	#PNR05Kom
+			additional_comments = row[134]	#KomShtese
 
 			# TODO: Figure out if invalid_ballots_in_box_xxx and ballots_set_aside_xxx are redundant.
 			# If invalid_ballots_in_box_xxx and ballots_set_aside_xxx refer to the same thing then we only need to count (invalid_ballots_in_box_xxx) and not the flag (ballots_set_aside_xxx)
@@ -253,7 +253,7 @@ def parse_csv():
 						'didTheyHaveNiceViewInProcedures':did_they_have_nice_view_in_procedures,
 						'didTheyControlSafetyStripBeforeOpeningBox':did_they_control_safety_strip_before_opening_box,
 						'safetyStripsUntouched':safety_strips_untouched,
-						'didTheyCountAndRegisterSignaturesInVotingBook':did_they_count_and_register_signitures_in_voting_book,
+						'didTheyCountAndRegisterSignaturesInVotersList':did_they_count_and_register_signitures_in_voters_list,
 						'whatIsTheNumberOfVotersInPollingStation':whats_number_of_voters_in_that_polling_station,
 						'numberOfSignaturesInVotersList':number_of_signatures_in_voters_list,
 						'didTheyCountAndRegisterUnusedBallots':did_they_count_and_register_unused_ballots,
@@ -267,7 +267,8 @@ def parse_csv():
 						'invalid':{
 							'inBallotBox': util.to_num(invalid_ballots_in_box_mae),
 							'setAside': util.to_boolean(ballots_set_aside_mae)
-						}
+						},
+					'didTheyPutVotesInTheBag':after_counting_did_they_put_votes_in_the_bag
 					},
 					'mayoral':{
 						'total': util.to_num(total_ballots_me),

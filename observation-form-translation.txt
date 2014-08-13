@@ -220,6 +220,75 @@ Ballots were set aside as invalid ballots?
 
 4. Pas num. të v. për AK, a u futën ato në thes.
 ????????????
+After counting the votes for Commune Assembly, did they put them in the bag.
+
+
+
+ORA 19:00, MBARON VOTIMI, FILLON NUMRIMI
+TIME 19:00 O'CLOCK, VOTING PROCESS FINISHED, COUNTING PROCESS STARTS
+
+1. Kur ka perfunduar procesi i votimit?
+When voting process finished?
+
+2. Persona qe pritnin kur u mbyll vv?
+anyone waiting to vote when polling station got closed?
+
+3. A u lejuan ata te votojne?
+did they allow them to vote?
+
+4. Koha kur filloi numrimi?
+When counting process started?
+
+5. Vezhguesit:
+Observers
+
+5.1 vezhguesit e PDK-se		-	PDK observers
+5.2 vezhguesit e LDK-se		-	LDK observers
+5.3 vezhguesit e LVV-se		-	LVV observers
+5.4 vezhguesit e AAK-se		-	AAK observers
+5.5 vezhguesit e AKR-se		-	AKR observers
+5.6 vezhguesit e Partive tjera - Other Parties observers
+5.7 vezhguesit e OJQ-ve		-	NGO observers
+5.8 vezhguesit e Medias		-	Media observers
+5.9 vezhguesit Ndekombetare	-	International observers
+5.10 vezhguesit tjere		-	Other observers
+
+6. A ka pasur persona te paautorizuar gjat numrimit?
+was there any unauthorized people while counting?
+
+7. Nese po kush?
+if yes, who were them?
+
+8. A kishin vezhguesit shikim te mire ne procedura ?
+did the observers have nice view in procedures?
+
+9. Au kontrolluan shiritat e  sigurise para hapjese se kutise se votimit?
+did they control the safety strips before opening the voting box?
+
+10. A jane shiritata e sigurise te paprekur ?
+are these safety strips untouched?
+
+11. A u numeruan dhe regjistruan nenshkrimet ne listen e votimit ?
+did they count and register signitures in the voting list?
+
+12.Sa eshte numri i votuesve ne listen e votimit per ate vend votim?
+what is the number of voters in voting list for that polling station?
+
+13.Numri i nenshkrimeve ne listen e votuesve?
+Numbners of signitures in voters list?
+
+14. A u numruan dhe regjistruan fletevotimet e paperdorura?
+did they count and register unused ballots?
+
+15.A u numruan dhe regjistruan fletevotimet e perdorura dhe ref.?
+did they count and register used ballots?
+
+16. A u verifikuan dhe regjistruan shiritat e sigurise?
+did they verify and register safety strips?
+
+17. A u vendosen anash materialet e votimit?
+did they set aside voting materials?
+
 
 
 TË DHËNAT PËR ZGJEDHJET PËR KRYETARË KOMUNASH
@@ -241,23 +310,27 @@ Where the ballots put in a transparent plastic bag?
 	Ballots provided:
 
 	Numri i nënshkr. në listën e votimeve me kush:
-	?????
+	Number of signatures in the condition voting list:
 
 	A janë numëruar zarfet e hapura ndaras...
-	?????
+	did they count the envelopes separatly
 
 
 PËRMBLEDHJE E NUMËRIMIT
 SUMMARY OF COUNTING
 
 1. A është vendimi mbi flv. e dyshimta i drejtë?
+did they take right decision for douptful ballots?
 
 2. Në rast mospajtimesh, a janë shënuar në libër?
-
+are the disagreements recorded in the book
 3. Kur ka përfunduar numërimi:
-
+when counting process finished
 4. A i ka kundër. ndonjë përfaqësues... rez.?
-
+was anyone against the results
 	Nese po, kush:
-
+	If yes, who:
 	Komente tjera:
+	other comments:
+5. Komente shtese
+Additional comments
