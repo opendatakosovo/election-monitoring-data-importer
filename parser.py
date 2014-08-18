@@ -95,17 +95,17 @@ def parse_csv():
 			how_many_voted_by_one_PM = row[49] # Column name: PV07-13
 			how_many_voted_by_four_PM = row[50] # Column name: PV07-16
 			how_many_voted_by_seven_PM = row[51] # Column name: PV07-19
-			number_of_voters_who_werent_in_the_voting_list = row[52] #column name:PV08ELV
+			number_of_voters_who_werent_in_the_voters_list = row[52] #column name:PV08ELV
 			number_of_conditional_voters = row[53] #column name: PV09NVK
-			number_of_assited_voters = row[54] #column name: PV10VAS
+			number_of_assisted_voters = row[54] #column name: PV10VAS
 			at_least_three_kvv_members_present_in_polling_station = row[55] #column name: PV11-3AN
 			did_anyone_refused_the_ballot = row[56] #column name: PV12_Ref
-			who_refused_it = row[57] #column name: PV12IFPo
+			how_many_refused_it = row[57] #column name: PV12IFPo
 			voting_process_comments = row[58] # column name: ProcVotKom
 			
 			# IRREGULARITY AND COMPLAINTS
 			attempt_to_vote_more_than_once = row[59] #Column name: PA01x1
-			allowed_to_vote = row[60] #Column name: PA01ifPO
+			allowed_to_vote = row[60] #Column name: PAifPO
 			take_picture_ofballot = row[61] #Column name: PA02Fot
 			inserted_more_than_one_ballot_in_the_box = row[62] #Column name: PA03M1F
 			unauthorized_persons_stayed_at_the_voting_station = row[63] #Column name: PA04PPD
@@ -229,19 +229,19 @@ def parse_csv():
 				'votingProcess':{
 					'whenVotingProcessStarted' : when_voting_process_started,
 					'observersPresent':{
-							'pdk':pdk_observers_present,	
-							'ldk':ldk_observers_present, 
-							'lvv':lvv_observers_present,
-							'aak':aak_observers_present,
-							'akr':akr_observers_present,
+							'pdk': util.to_boolean(pdk_observers_present),	
+							'ldk': util.to_boolean(ldk_observers_present), 
+							'lvv': util.to_boolean(lvv_observers_present),
+							'aak': util.to_boolean(aak_observers_present),
+							'akr': util.to_boolean(akr_observers_present),
 							'othersParties':{
 								'first': other_parties_observers_1_present,
 								'second': other_parties_observers_2_present,
 								'third': other_parties_observers_3_present,
 							},
-							'ngo': ngo_observers_present,
-							'media': media_observers_present,
-							'international': international_observers_present,
+							'ngo': util.to_boolean(ngo_observers_present),
+							'media': util.to_boolean(media_observers_present),
+							'international': util.to_boolean(international_observers_present),
 							'other': other_observers_present
 					},
 					'voters':{
@@ -254,63 +254,71 @@ def parse_csv():
 							'onePM': util.to_num(how_many_voted_by_one_PM),
 							'fourPM': util.to_num(how_many_voted_by_four_PM),
 							'sevenPM': util.to_num(how_many_voted_by_seven_PM)
-						}
-					}
+						},
+						'howManyVotersWerentInVotersList' : util.to_num(number_of_voters_who_werent_in_the_voters_list),
+						'conditionalVoters' : util.to_num(number_of_conditional_voters),
+						'numberOfAssistedVoters' : util.to_num(number_of_assisted_voters),
+						'anyoneRefusedTheBallot' : util.to_boolean(did_anyone_refused_the_ballot),
+						'howMany' : util.to_num(how_many_refused_it)
+						
+					},
+					'atLeastThreeKvvMembersPresentInPollingStation' : util.to_boolean(at_least_three_kvv_members_present_in_polling_station),
+					'votingProcessComments' : voting_process_comments
 				},
 				'irregularities':{
 					'attemptToVoteMoreThanOnce':util.to_boolean(attempt_to_vote_more_than_once),
 					'allowedToVote':util.to_boolean(allowed_to_vote),
 					'photographedBallot':util.to_boolean(take_picture_ofballot),
 					'insertedMoreThanOneBallot':util.to_boolean(inserted_more_than_one_ballot_in_the_box),
-				 	'unauthorizedPersonsStayedAtTheVotingStation':util.to_boolean(unauthorized_persons_stayed_at_the_voting_station),
-					'violenceInTheVotingStation':util.to_boolean(violence_in_the_voting_station),
-					'politicalPropagandaInsideTheVotingStation':util.to_boolean(politic_propaganda_inside_the_voting_station),
-					'moreThanOnePersonBehindTheCabin':util.to_boolean(more_than_one_person_behind_the_cabin),
-					'hasTheVotingStationBeenClosedInAnyCase':util.to_boolean(has_the_voting_station_been_closed_in_any_case),
-					'caseVotingOutsideTheCabin':util.to_num(case_voting_outside_the_cabin),
+				 	'unauthorizedPersonsStayedAtTheVotingStation': util.to_boolean(unauthorized_persons_stayed_at_the_voting_station),
+					'violenceInTheVotingStation': util.to_boolean(violence_in_the_voting_station),
+					'politicalPropagandaInsideTheVotingStation': util.to_boolean(politic_propaganda_inside_the_voting_station),
+					'moreThanOnePersonBehindTheCabin': util.to_boolean(more_than_one_person_behind_the_cabin),
+					'hasTheVotingStationBeenClosedInAnyCase': util.to_boolean(has_the_voting_station_been_closed_in_any_case),
+					'caseVotingOutsideTheCabin': util.to_boolean(case_voting_outside_the_cabin),
 					'areTheKvvMembersImpartialWhenTheyReactToComplaints' : util.translate_frequency(are_KVV_members_impartial_when_they_react_to_compliants),
 					'anyAccidentHappenedDuringTheProcess': util.to_boolean(any_accident_happened_during_the_process)
 				},					
 				'complaints':{
-					'total':util.to_num(how_many_voters_complained_during_the_process),
+					'total': util.to_num(how_many_voters_complained_during_the_process),
 					'filled': util.to_num(how_many_voters_filled_the_complaints_form)
 				},
 
 				'countingProcess':{	
 						'whenVotingProcessFinished':when_voting_process_finished,
-						'anyoneWaitingWhenPollingStationClosed':anyone_waiting_when_polling_station_closed,
-						'didTheyAllowThemToVote':did_they_allow_them_to_vote,
+						'anyoneWaitingWhenPollingStationClosed': util.to_boolean(anyone_waiting_when_polling_station_closed),
+						'didTheyAllowThemToVote': util.to_boolean(did_they_allow_them_to_vote),
 						'whenCountingProcessStarted':when_counting_process_started,
 						'observers':{
-							'pdk':pdk_observers,	
-							'ldk':ldk_observers, 
-							'lvv':lvv_observers,
-							'aak':aak_observers,
-							'akr':akr_observers,
+							'pdk': util.to_boolean(pdk_observers),	
+							'ldk': util.to_boolean(ldk_observers), 
+							'lvv': util.to_boolean(lvv_observers),
+							'aak': util.to_boolean(aak_observers),
+							'akr': util.to_boolean(akr_observers),
 							'othersParties':{
 								'first': other_parties_observers_1,
 								'second': other_parties_observers_2,
 								'third': other_parties_observers_3,
 							},
-							'ngo': ngo_observers,
-							'media': media_observers,
-							'international': international_observers,
+							'ngo': util.to_boolean(ngo_observers),
+							'media': util.to_boolean(media_observers),
+							'international': util.to_boolean(international_observers),
 							'other': other_observers
 						},
 						'unauthorizedPersons':{
-							'present': any_unauthorized_person_while_counting,
+							'present': util.to_boolean(any_unauthorized_person_while_counting),
 							'who': who_were_these_unauthorized_persons
 						},
-						'didTheyHaveNiceViewInProcedures':did_they_have_nice_view_in_procedures, #FIXME: Who is they? Put they in their own obect.
-						'didTheyControlSafetyStripBeforeOpeningBox':did_they_control_safety_strip_before_opening_box,#FIXME: Who is they? 
-						'safetyStripsUntouched':safety_strips_untouched,
-						'didTheyCountAndRegisterSignaturesInVotersList':did_they_count_and_register_signitures_in_voters_list, #FIXME: Who is they? 
-						'whatIsTheNumberOfVotersInPollingStation':whats_number_of_voters_in_that_polling_station,
-						'numberOfSignaturesInVotersList':number_of_signatures_in_voters_list,
-						'didTheyCountAndRegisterUnusedBallots':did_they_count_and_register_unused_ballots, #FIXME: Who is they? 
-						'didTheyCountAndRegisterUsedBallots':did_they_count_and_register_used_ballots, #FIXME: Who is they? 
-						'didTheyVerifyAndRegisterSafetyStrip':did_they_verify_and_register_safety_strips, #FIXME: Who is they? 
-						'votingMaterialsSetAside':voting_materials_set_aside
+						'didTheyHaveNiceViewInProcedures': util.to_boolean(did_they_have_nice_view_in_procedures), #FIXME: Who is they? Put they in their own obect.
+						'didTheyControlSafetyStripBeforeOpeningBox': util.to_boolean(did_they_control_safety_strip_before_opening_box),#FIXME: Who is they? 
+						'safetyStripsUntouched':util.to_boolean(safety_strips_untouched),
+						'didTheyCountAndRegisterSignaturesInVotersList': util.to_boolean(did_they_count_and_register_signitures_in_voters_list), #FIXME: Who is they? 
+						'whatIsTheNumberOfVotersInPollingStation': util.to_num(whats_number_of_voters_in_that_polling_station),
+						'numberOfSignaturesInVotersList': util.to_num(number_of_signatures_in_voters_list),
+						'didTheyCountAndRegisterUnusedBallots': util.to_boolean(did_they_count_and_register_unused_ballots), #FIXME: Who is they? 
+						'didTheyCountAndRegisterUsedBallots': util.to_boolean(did_they_count_and_register_used_ballots), #FIXME: Who is they? 
+						'didTheyVerifyAndRegisterSafetyStrip': util.to_boolean(did_they_verify_and_register_safety_strips), #FIXME: Who is they? 
+						'votingMaterialsSetAside': util.to_boolean(voting_materials_set_aside)
 					},
 				'ballots':{
 					'municipalAssembly':{
@@ -319,7 +327,7 @@ def parse_csv():
 							'inBallotBox': util.to_num(invalid_ballots_in_box_mae),
 							'setAside': util.to_boolean(ballots_set_aside_mae)
 						},
-					'didTheyPutVotesInTheBag':after_counting_did_they_put_votes_in_the_bag
+					'didTheyPutVotesInTheBag': util.to_boolean(after_counting_did_they_put_votes_in_the_bag)
 					},
 					'mayoral':{
 						'total': util.to_num(total_ballots_me),
@@ -328,9 +336,9 @@ def parse_csv():
 							'setAside': util.to_boolean(ballots_set_aside_me)
 						},
 						'putInTransparentBag': util.to_boolean(bollots_put_in_transaparent_bag),
-						'conditionBallots':condition_ballots,
+						'conditionBallots': util.to_num(condition_ballots),
 						'numberOfSignaturesInConditionVotingList': util.to_num(number_of_signitures_in_condtion_voting_list),
-						'didTheyCountEnvelopesSeparatly':did_they_count_envelopes_separatly
+						'didTheyCountEnvelopesSeparatly': util.to_boolean(did_they_count_envelopes_separatly)
 					}
 				},
 				'countingProcessSummary': {
@@ -338,7 +346,7 @@ def parse_csv():
 					'disgreementsRecorded': util.translate_frequency(are_the_disagreements_recorded_in_the_book),
 					'countingProcessFinishTime':when_counting_process_finished,
 					'oppositions':{
-						'anyoneOpposed': was_anyone_against_the_results,
+						'anyoneOpposed': util.to_boolean(was_anyone_against_the_results),
 						'who': who_was_against_results
 					},
 					'comments':other_comments
