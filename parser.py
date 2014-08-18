@@ -31,12 +31,20 @@ def parse_csv():
 		
 		# Iterate through the rows, retrieve desired values.
 		for row in reader:
-			# POLLING STATION
+
+			# OBSERVER AND POLLING STATION INFORMATION
+			observer_name = row[1] #column name: EmriV
+			observer_number = row[2] #colun name: NrV
 			polling_station_number = row[3].lower() # Column name: nrQV
 			room_number = row[4] # Column name: NRVV
 			
 			commune = row[5] # Column name: Komuna
 			polling_station_name = row[6] # Column name: EQV
+
+			# VOTING MATERIAL
+			material_left_behind = row[7] # Column name: 01gja
+			have_physical_access = row[8] # Column name: 02gja
+			
 			
 			# ARRIVAL TIME
 			arrival_time = row[9] # column name: P01KA
@@ -63,37 +71,53 @@ def parse_csv():
 			cabins_provided_voters_safety_and_privancy = row[30] # column name:P12KFV
 
 	
-
-			# VOTING MATERIAL
-			material_left_behind = row[7] # Column name: 01gja
-			have_physical_access = row[8] # Column name: 02gja
+			# VOTING PROCESS
+			when_voting_process_started = row[31] #Column name: PV1KHV
+			pdk_observers_present = row[32] #column name: PDK	
+			ldk_observers_present = row[33] #column name LDK
+			lvv_observers_present = row[34] #column name LVV	
+			aak_observers_present = row[35] #column name AAK
+			akr_observers_present = row[36] #column name AKR
+			other_parties_observers_1_present = row[37] #column name: ParTj01
+			other_parties_observers_2_present = row[38] #column name: ParTj02
+			other_parties_observers_3_present = row[39] #column name: ParTj03
+			ngo_observers_present = row[40] #column name: OJQ
+			media_observers_present = row[41] #column name: Media
+			international_observers_present = row[42] #column name: VzhND
+			other_observers_present = row[43] #column name: VzhTjere
 			
-			# VOTER INFORMATION
-			ultra_violet_control = row[45] # Column name: PV03UVL
-			identified_with_document = row[46] # Column name: PV04IDK
-			finger_sprayed = row[47] # Column name: PV05GSH
-			sealed_ballot = row[48] # Column name: PV06VUL
-			
-			how_many_voted_by_ten_AM = row[49] # Column name: PV07-10
-			how_many_voted_by_one_PM = row[50] # Column name: PV07-13
-			how_many_voted_by_four_PM = row[51] # Column name: PV07-16
-			how_many_voted_by_seven_PM = row[52] # Column name: PV07-19
+			# VOTERS INFORMATION
+			ultra_violet_control = row[44] # Column name: PV03UVL
+			identified_with_document = row[45] # Column name: PV04IDK
+			finger_sprayed = row[46] # Column name: PV05GSH
+			sealed_ballot = row[47] # Column name: PV06VUL
+			how_many_voted_by_ten_AM = row[48] # Column name: PV07-10
+			how_many_voted_by_one_PM = row[49] # Column name: PV07-13
+			how_many_voted_by_four_PM = row[50] # Column name: PV07-16
+			how_many_voted_by_seven_PM = row[51] # Column name: PV07-19
+			number_of_voters_who_werent_in_the_voting_list = row[52] #column name:PV08ELV
+			number_of_conditional_voters = row[53] #column name: PV09NVK
+			number_of_assited_voters = row[54] #column name: PV10VAS
+			at_least_three_kvv_members_present_in_polling_station = row[55] #column name: PV11-3AN
+			did_anyone_refused_the_ballot = row[56] #column name: PV12_Ref
+			who_refused_it = row[57] #column name: PV12IFPo
+			voting_process_comments = row[58] # column name: ProcVotKom
 			
 			# IRREGULARITY AND COMPLAINTS
-			attempt_to_vote_moreThanOnce=row[59] #Column name: PA01x1
-			allowed_to_vote=row[60] #Column name: PA01ifPO
-			take_picture_ofballot=row[61] #Column name: PA02Fot
-			inserted_more_than_one_ballot_in_the_box=row[62] #Column name: PA03M1F
-			unauthorized_persons_stayed_at_the_voting_station=row[63] #Column name: PA04PPD
-			violence_in_the_voting_station=row[64] #Column name: PA05DHU
-			politic_propaganda_inside_the_voting_station=row[65] #Column name: PA06PRP
-			more_than_one_person_behind_the_cabin=row[66] #Column name: PA07M1P
-			has_the_voting_station_been_closed_in_any_case=row[67] #Column name: PA08MBV
-			case_voting_outside_the_cabin=row[68] #Column name: PA09VJK
-			how_many_voters_complained_during_the_process=row[69] #Column name: PA10VAV
-			how_many_voters_filled_the_complaints_form=row[70] #Column name: PA11VMF
+			attempt_to_vote_more_than_once = row[59] #Column name: PA01x1
+			allowed_to_vote = row[60] #Column name: PA01ifPO
+			take_picture_ofballot = row[61] #Column name: PA02Fot
+			inserted_more_than_one_ballot_in_the_box = row[62] #Column name: PA03M1F
+			unauthorized_persons_stayed_at_the_voting_station = row[63] #Column name: PA04PPD
+			violence_in_the_voting_station = row[64] #Column name: PA05DHU
+			politic_propaganda_inside_the_voting_station = row[65] #Column name: PA06PRP
+			more_than_one_person_behind_the_cabin = row[66] #Column name: PA07M1P
+			has_the_voting_station_been_closed_in_any_case = row[67] #Column name: PA08MBV
+			case_voting_outside_the_cabin = row[68] #Column name: PA09VJK
+			how_many_voters_complained_during_the_process = row[69] #Column name: PA10VAV
+			how_many_voters_filled_the_complaints_form = row[70] #Column name: PA11VMF
 			are_KVV_members_impartial_when_they_react_to_compliants = row[71] #column name PA12PAA
-			any_accident_happened_during_the_process=row[72] #Column name: PA13INC	
+			any_accident_happened_during_the_process = row[72] #Column name: PA13INC	
 			
 			# TIME OF COUNTING PROCESS	
 			when_voting_process_finished = row[73] #Column name PM01PPV
@@ -159,10 +183,12 @@ def parse_csv():
 			observation = {
 				'_id': str(ObjectId()),
 				'pollingStation':{
-					'number': polling_station_number,
+					'observerName' : observer_name,
+					'observerNumber' : observer_number,
+					'pollingStationNumber': polling_station_number,
 					'roomNumber': room_number,
-					'name': polling_station_name,
-					'nameSlug': slugify(polling_station_name),
+					'pollingStationName': polling_station_name,
+					'pollingStationNameSlug': slugify(polling_station_name),
 					'commune': commune,
 					'communeSlug': slugify(commune)
 				},
@@ -201,6 +227,23 @@ def parse_csv():
 				'cabinsSafetyAndPrivacy': util.to_boolean(cabins_provided_voters_safety_and_privancy),
 				},
 				'votingProcess':{
+					'whenVotingProcessStarted' : when_voting_process_started,
+					'observersPresent':{
+							'pdk':pdk_observers_present,	
+							'ldk':ldk_observers_present, 
+							'lvv':lvv_observers_present,
+							'aak':aak_observers_present,
+							'akr':akr_observers_present,
+							'othersParties':{
+								'first': other_parties_observers_1_present,
+								'second': other_parties_observers_2_present,
+								'third': other_parties_observers_3_present,
+							},
+							'ngo': ngo_observers_present,
+							'media': media_observers_present,
+							'international': international_observers_present,
+							'other': other_observers_present
+					},
 					'voters':{
 						'ultraVioletControl': util.translate_frequency(ultra_violet_control),
 						'identifiedWithDocument': util.translate_frequency(identified_with_document),
@@ -215,7 +258,7 @@ def parse_csv():
 					}
 				},
 				'irregularities':{
-					'attemptToVoteMoreThanOnce':util.to_boolean(attempt_to_vote_moreThanOnce),
+					'attemptToVoteMoreThanOnce':util.to_boolean(attempt_to_vote_more_than_once),
 					'allowedToVote':util.to_boolean(allowed_to_vote),
 					'photographedBallot':util.to_boolean(take_picture_ofballot),
 					'insertedMoreThanOneBallot':util.to_boolean(inserted_more_than_one_ballot_in_the_box),
@@ -286,7 +329,7 @@ def parse_csv():
 						},
 						'putInTransparentBag': util.to_boolean(bollots_put_in_transaparent_bag),
 						'conditionBallots':condition_ballots,
-						'numberOfSignaturesInConditionVotingList':number_of_signitures_in_condtion_voting_list,
+						'numberOfSignaturesInConditionVotingList': util.to_num(number_of_signitures_in_condtion_voting_list),
 						'didTheyCountEnvelopesSeparatly':did_they_count_envelopes_separatly
 					}
 				},
