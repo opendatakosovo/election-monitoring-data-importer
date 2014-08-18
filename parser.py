@@ -3,15 +3,17 @@ import csv
 from pymongo import MongoClient
 from bson import ObjectId
 from utils import Utils
+from slugify import slugify
 
 csv_filename = 'kdi-local-elections-observations-first-round-2013.csv'
+collection_name = 'localelectionsfirstround2013'
 
 # Connect to default local instance of mongo
 client = MongoClient()
 
 # Get database and collection
 db = client.kdi
-collection = db.localelectionsfirstround2013
+collection = db[collection_name]
 
 # Clear data
 collection.remove({})
@@ -78,21 +80,22 @@ def parse_csv():
 			how_many_voted_by_seven_PM = row[52] # Column name: PV07-19
 			
 			# IRREGULARITY AND COMPLAINTS
-			attempt_to_vote_moreThanOnce=row[60] #Column name: PA01x1
-			allowed_to_vote=row[61] #Column name: PA01ifPO
-			take_picture_ofballot=row[62] #Column name: PA02Fot
-			inserted_more_than_one_ballot_in_the_box=row[63] #Column name: PA03M1F
-			unauthorized_persons_stayed_at_the_voting_station=row[64] #Column name: PA04PPD
-			violence_in_the_voting_station=row[65] #Column name: PA05DHU
-			politic_propaganda_inside_the_voting_station=row[66] #Column name: PA06PRP
-			more_than_one_person_behind_the_cabin=row[67] #Column name: PA07M1P
-			has_the_voting_station_been_closed_in_any_case=row[68] #Column name: PA08MBV
-			case_voting_outside_the_cabin=row[69] #Column name: PA09VJK
-			how_many_voters_complained_during_the_process=row[70] #Column name: PA10VAV
-			how_many_voters_filled_the_complaints_form=row[71] #Column name: PA11VMF
-			any_accident_happened_during_the_process=row[72] #Column name: PA12PAA	
+			attempt_to_vote_moreThanOnce=row[59] #Column name: PA01x1
+			allowed_to_vote=row[60] #Column name: PA01ifPO
+			take_picture_ofballot=row[61] #Column name: PA02Fot
+			inserted_more_than_one_ballot_in_the_box=row[62] #Column name: PA03M1F
+			unauthorized_persons_stayed_at_the_voting_station=row[63] #Column name: PA04PPD
+			violence_in_the_voting_station=row[64] #Column name: PA05DHU
+			politic_propaganda_inside_the_voting_station=row[65] #Column name: PA06PRP
+			more_than_one_person_behind_the_cabin=row[66] #Column name: PA07M1P
+			has_the_voting_station_been_closed_in_any_case=row[67] #Column name: PA08MBV
+			case_voting_outside_the_cabin=row[68] #Column name: PA09VJK
+			how_many_voters_complained_during_the_process=row[69] #Column name: PA10VAV
+			how_many_voters_filled_the_complaints_form=row[70] #Column name: PA11VMF
+			are_KVV_members_impartial_when_they_react_to_compliants = row[71] #column name PA12PAA
+			any_accident_happened_during_the_process=row[72] #Column name: PA13INC	
 			
-			# TIME OF VOTES COUNTING PROCESS	
+			# TIME OF COUNTING PROCESS	
 			when_voting_process_finished = row[73] #Column name PM01PPV
 			anyone_waiting_when_polling_station_closed = row[74] #column name PM02PJA
 			did_they_allow_them_to_vote = row[75] #column name PM03LVT
@@ -159,9 +162,9 @@ def parse_csv():
 					'number': polling_station_number,
 					'roomNumber': room_number,
 					'name': polling_station_name,
-					'nameSlug': util.slugify(polling_station_name),
+					'nameSlug': slugify(polling_station_name),
 					'commune': commune,
-					'communeSlug':util.slugify(commune)
+					'communeSlug': slugify(commune)
 				},
 				'onArrival':{
 					'materialLeftBehind': util.to_boolean(material_left_behind),
@@ -202,7 +205,7 @@ def parse_csv():
 						'ultraVioletControl': util.translate_frequency(ultra_violet_control),
 						'identifiedWithDocument': util.translate_frequency(identified_with_document),
 						'fingerSprayed': util.translate_frequency(finger_sprayed),
-						'sealedBallot': util.to_num(sealed_ballot),
+						'sealedBallot': util.translate_frequency(sealed_ballot),
 						'howManyVotedBy':{
 							'tenAM': util.to_num(how_many_voted_by_ten_AM),
 							'onePM': util.to_num(how_many_voted_by_one_PM),
@@ -222,11 +225,12 @@ def parse_csv():
 					'moreThanOnePersonBehindTheCabin':util.to_boolean(more_than_one_person_behind_the_cabin),
 					'hasTheVotingStationBeenClosedInAnyCase':util.to_boolean(has_the_voting_station_been_closed_in_any_case),
 					'caseVotingOutsideTheCabin':util.to_num(case_voting_outside_the_cabin),
-					'anyAccidentHappenedDuringTheProcess':util.to_boolean(any_accident_happened_during_the_process)
+					'areTheKvvMembersImpartialWhenTheyReactToComplaints' : util.translate_frequency(are_KVV_members_impartial_when_they_react_to_compliants),
+					'anyAccidentHappenedDuringTheProcess': util.to_boolean(any_accident_happened_during_the_process)
 				},					
 				'complaints':{
 					'total':util.to_num(how_many_voters_complained_during_the_process),
-					'filed':how_many_voters_filled_the_complaints_form	#FIXME: This is meant to be a number but instead it's a frequency term.
+					'filled': util.to_num(how_many_voters_filled_the_complaints_form)
 				},
 
 				'countingProcess':{	
@@ -287,8 +291,8 @@ def parse_csv():
 					}
 				},
 				'countingProcessSummary': {
-					'doubtfulBallotsProperlyHandled':right_decision_for_doubtful_ballots,
-					'disgreementsRecorded':are_the_disagreements_recorded_in_the_book,
+					'doubtfulBallotsProperlyHandled': util.translate_frequency(right_decision_for_doubtful_ballots),
+					'disgreementsRecorded': util.translate_frequency(are_the_disagreements_recorded_in_the_book),
 					'countingProcessFinishTime':when_counting_process_finished,
 					'oppositions':{
 						'anyoneOpposed': was_anyone_against_the_results,

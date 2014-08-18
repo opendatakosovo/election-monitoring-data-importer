@@ -1,5 +1,3 @@
-from slugify import slugify
-
 class Utils(object):
 
 	def __init__(self):
@@ -35,13 +33,17 @@ class Utils(object):
 		# There is probably a more elegant way to deal with this.
 		if term.startswith('Gjithmon'):
 			return 'always'
+
+		elif term.startswith('Nganj'):
+
+			return 'sometimes'
+		elif term.startswith('Rrall'):
+			
+			return 'rarely'
+		elif term.startswith('Aspak'):
+
+			return 'never'
 		else:
+
 			return term
 
-
-	def slugify(self, slug):
-		
-		return slugify(slug)
-
-
-		#TODO: Cover the other terms
