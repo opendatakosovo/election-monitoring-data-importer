@@ -180,15 +180,16 @@ def parse_csv():
 			#FIXME: Translate PO/YO to True/False boolean values.
 			#FIXME: Translate mutlti-choice values to english (e.g. Gjithmone to Always)
 			util = Utils()
+
 			observation = {
 				'_id': str(ObjectId()),
 				'pollingStation':{
 					'observerName' : observer_name,
 					'observerNumber' : observer_number,
-					'pollingStationNumber': polling_station_number,
+					'number': polling_station_number,
 					'roomNumber': room_number,
-					'pollingStationName': polling_station_name,
-					'pollingStationNameSlug': slugify(polling_station_name),
+					'name': polling_station_name,
+					'nameSlug': slugify(polling_station_name),
 					'commune': commune,
 					'communeSlug': slugify(commune)
 				},
