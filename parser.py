@@ -78,9 +78,15 @@ def parse_csv():
 			lvv_observers_present = row[34] #column name LVV	
 			aak_observers_present = row[35] #column name AAK
 			akr_observers_present = row[36] #column name AKR
+
+
 			other_parties_observers_1_present = row[37] #column name: ParTj01
 			other_parties_observers_2_present = row[38] #column name: ParTj02
 			other_parties_observers_3_present = row[39] #column name: ParTj03
+
+			other_parties_observers = [other_parties_observers_1_present, other_parties_observers_2_present, other_parties_observers_3_present]
+			other_parties_observers = filter(None, other_parties_observers)
+
 			ngo_observers_present = row[40] #column name: OJQ
 			media_observers_present = row[41] #column name: Media
 			international_observers_present = row[42] #column name: VzhND
@@ -129,9 +135,15 @@ def parse_csv():
 			lvv_observers = row[79] #column name PM05-LVV	
 			aak_observers = row[80] #column name PM05-AAK
 			akr_observers = row[81] #column name PM05-AKR
+
 			other_parties_observers_1 = row[82] #column name PM05-TJ1
 			other_parties_observers_2 = row[83] #column name PM05-TJ2
 			other_parties_observers_3 = row[84] #column name PM05-TJ3
+
+			other_parties = [other_parties_observers_1, other_parties_observers_2, other_parties_observers_3]
+			other_parties = filter(None, other_parties)
+
+		
 			ngo_observers = row[85] #column name PM05-OJQ
 			media_observers = row[86] #column name PM05-MED
 			international_observers = row[87] #column name PM05-VZH
@@ -176,9 +188,6 @@ def parse_csv():
 			# TODO: Figure out if invalid_ballots_in_box_xxx and ballots_set_aside_xxx are redundant.
 			# If invalid_ballots_in_box_xxx and ballots_set_aside_xxx refer to the same thing then we only need to count (invalid_ballots_in_box_xxx) and not the flag (ballots_set_aside_xxx)
 			
-			#FIXME: When dealing with numbers, set in document as int instead of string.
-			#FIXME: Translate PO/YO to True/False boolean values.
-			#FIXME: Translate mutlti-choice values to english (e.g. Gjithmone to Always)
 			util = Utils()
 			observation = {
 				'_id': str(ObjectId()),
@@ -234,11 +243,7 @@ def parse_csv():
 							'lvv': util.to_boolean(lvv_observers_present),
 							'aak': util.to_boolean(aak_observers_present),
 							'akr': util.to_boolean(akr_observers_present),
-							'othersParties':{
-								'first': other_parties_observers_1_present,
-								'second': other_parties_observers_2_present,
-								'third': other_parties_observers_3_present,
-							},
+							'otherParties' : other_parties_observers,
 							'ngo': util.to_boolean(ngo_observers_present),
 							'media': util.to_boolean(media_observers_present),
 							'international': util.to_boolean(international_observers_present),
@@ -295,11 +300,7 @@ def parse_csv():
 							'lvv': util.to_boolean(lvv_observers),
 							'aak': util.to_boolean(aak_observers),
 							'akr': util.to_boolean(akr_observers),
-							'othersParties':{
-								'first': other_parties_observers_1,
-								'second': other_parties_observers_2,
-								'third': other_parties_observers_3,
-							},
+							'othersParties': other_parties,
 							'ngo': util.to_boolean(ngo_observers),
 							'media': util.to_boolean(media_observers),
 							'international': util.to_boolean(international_observers),
