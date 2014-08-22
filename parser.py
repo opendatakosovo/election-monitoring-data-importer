@@ -189,15 +189,16 @@ def parse_csv():
 			# If invalid_ballots_in_box_xxx and ballots_set_aside_xxx refer to the same thing then we only need to count (invalid_ballots_in_box_xxx) and not the flag (ballots_set_aside_xxx)
 			
 			util = Utils()
+
 			observation = {
 				'_id': str(ObjectId()),
 				'pollingStation':{
 					'observerName' : observer_name,
 					'observerNumber' : observer_number,
-					'pollingStationNumber': polling_station_number,
+					'number': polling_station_number,
 					'roomNumber': room_number,
-					'pollingStationName': polling_station_name,
-					'pollingStationNameSlug': slugify(polling_station_name),
+					'name': polling_station_name,
+					'nameSlug': slugify(polling_station_name),
 					'commune': commune,
 					'communeSlug': slugify(commune)
 				},
