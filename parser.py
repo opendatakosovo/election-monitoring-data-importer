@@ -1,19 +1,28 @@
 import csv
-
 from pymongo import MongoClient
 from bson import ObjectId
 from utils import Utils
 from slugify import slugify
+import argparse
 
-csv_filename = 'kdi-local-elections-observations-first-round-2013.csv'
-collection_name = 'localelectionsfirstround2013'
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--csvFileName',type=str,help='Type the file name of the CSV that you want data to import in.')
+parser.add_argument('--collectionName',type=str, help='Type the collection name[mongodb] that you want data to be in.')
+
+# Parse arguemnts and run the app.	
+args = parser.parse_args()
+
+csv_filename = '%s'%(args.csvFileName)
+collection_name = '%s'%(args.collectionName)
+print csv_filename
 # Connect to default local instance of mongo
 client = MongoClient()
 
 # Get database and collection
 db = client.kdi
 collection = db[collection_name]
+
 
 # Clear data
 collection.remove({})
@@ -28,7 +37,7 @@ def parse_csv():
 		reader = csv.reader(csvfile)
 		# Skip the header
 		next(reader, None)
-		
+
 		# Iterate through the rows, retrieve desired values.
 		for row in reader:
 
