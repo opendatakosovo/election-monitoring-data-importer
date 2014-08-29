@@ -9,8 +9,31 @@ class Utils(object):
 			return True
 		elif arg == "JO" or arg == "FALSE":
 			return False 
+
+		elif arg == "0":
+			return False
+		elif arg == "1" or arg == "2":
+			return True
+
 		else:
-			return arg		
+			return arg
+
+	@staticmethod
+	def to_boolean_second(arg):
+		''' Converting second val to boolean.
+			0 -> False/False
+			2 -> True/False
+			3 -> True/True
+		:param arg: string argument to convert to boolean 
+		'''
+		if arg == "1":
+			return False
+
+		elif arg == "2":
+			return True
+
+		else:
+			return arg	
 
 	@staticmethod
 	def to_num(s):
@@ -31,18 +54,18 @@ class Utils(object):
 		'''
 		# Use startswith because we don't want to deal with encoding issues (e umlaut).
 		# There is probably a more elegant way to deal with this.
-		if term.startswith('Gjithmon'):
+		if term.startswith('Gjithmon') or term == '1':
 			return 'always'
 
-		elif term.startswith('Nganj'):
-
+		elif term.startswith('Nganj') or term == '2':
 			return 'sometimes'
-		elif term.startswith('Rrall'):
-			
-			return 'rarely'
-		elif term.startswith('Aspak'):
 
+		elif term.startswith('Rrall') or term == '3':
+			return 'rarely'
+
+		elif term.startswith('Aspak') or term == '4':
 			return 'never'
+
 		else:
 
 			return term

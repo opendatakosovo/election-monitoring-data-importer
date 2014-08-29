@@ -44,7 +44,7 @@ def import_data():
 				importer = DiaImporter2013(csv_filepath, collection_name, utils)
 
 			elif election_year == '2014':
-				importer = DiaImporter2014()
+				importer = DiaImporter2014(csv_filepath, collection_name, utils)
 
 		# Run the importer
 		rsp = importer.run()

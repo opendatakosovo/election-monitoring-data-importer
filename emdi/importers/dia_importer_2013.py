@@ -1,28 +1,18 @@
 import csv
 from bson import ObjectId
 from slugify import slugify
-from pymongo import MongoClient
+
+from dia_importer import DiaImporter
 
 # FIXME: Passing utils as constructor argument because for some reason when we import it from DiaImporter2013 we get this error message:
 # 	AttributeError: 'module' object has no attribute 'to_boolean'
 #	WHY?!?!
 #from emdi import utils
 
-class DiaImporter2013(object):
+class DiaImporter2013(DiaImporter):
 
 	def __init__(self, csv_filepath, collection_name, utils):
-		self.collection_name = collection_name
-		self.csv_filepath = csv_filepath
-
-		self.mongo = MongoClient()
-
-		# Clear collection prior to import.
-		self.mongo.kdi[collection_name].remove({})
-
-		# FIXME: Passing utils as constructor argument because for some reason when we import it from DiaImporter2013 we get this error message:
-		# 	AttributeError: 'module' object has no attribute 'to_boolean'
-		#	WHY?!?!
-		self.utils = utils
+		DiaImporter.__init__(self, csv_filepath, collection_name, utils)
 
 
 	def run(self):
@@ -41,20 +31,11 @@ class DiaImporter2013(object):
 
 			# Iterate through the rows, retrieve desired values.
 			for row in reader:
-
-				# OBSERVER AND POLLING STATION INFORMATION
-				observer_name = row[1] #column name: EmriV
-				observer_number = row[2] #colun name: NrV
-				polling_station_number = row[3].lower() # Column name: nrQV
-				room_number = row[4] # Column name: NRVV
-			
-				commune = row[5] # Column name: Komuna
-				polling_station_name = row[6] # Column name: EQV
+				
 
 				# VOTING MATERIAL
 				material_left_behind = row[7] # Column name: 01gja
 				have_physical_access = row[8] # Column name: 02gja
-			
 			
 				# ARRIVAL TIME
 				arrival_time = row[9] # column name: P01KA
@@ -63,15 +44,7 @@ class DiaImporter2013(object):
 				when_preparation_start = row[12] # column name:P03Perg
 				number_KVV_members = row[13] #column name:P04KVV
 				female = row[14] #column name:P04Fem
-				UV_lamp = row[15] #column name:P05Lla
-				spray = row[16] # column name:P05Ngj
-				voters_list = row[17] # column name:P05Lis
-				ballots = row[18] # column name:P05Flv	
-				stamp = row[19] # column name:P05Vul
-				ballot_box = row[20] # column name:P05Kut
-				voters_book = row[21] # column name:P05Lib
-				voting_cabin = row[22] # column name:P05Kab
-				envelops_condition_voters = row[23] # column name:P05ZFK
+
 				number_of_accepted_ballots = row[24] # column name:P06NFP
 				number_of_voters_in_voting_station_list = row[25] # column name: P07VNL
 				number_of_voting_cabins=row[26] # column name:P08NKV
@@ -80,60 +53,6 @@ class DiaImporter2013(object):
 				did_they_register_serial_number_of_strips = row[29] # column name:P11NRS
 				cabins_provided_voters_safety_and_privancy = row[30] # column name:P12KFV
 
-	
-				# VOTING PROCESS
-				when_voting_process_started = row[31] #Column name: PV1KHV
-				pdk_observers_present = row[32] #column name: PDK	
-				ldk_observers_present = row[33] #column name LDK
-				lvv_observers_present = row[34] #column name LVV	
-				aak_observers_present = row[35] #column name AAK
-				akr_observers_present = row[36] #column name AKR
-
-
-				other_parties_observers_1_present = row[37] #column name: ParTj01
-				other_parties_observers_2_present = row[38] #column name: ParTj02
-				other_parties_observers_3_present = row[39] #column name: ParTj03
-
-				other_parties_observers = [other_parties_observers_1_present, other_parties_observers_2_present, other_parties_observers_3_present]
-				other_parties_observers = filter(None, other_parties_observers)
-
-				ngo_observers_present = row[40] #column name: OJQ
-				media_observers_present = row[41] #column name: Media
-				international_observers_present = row[42] #column name: VzhND
-				other_observers_present = row[43] #column name: VzhTjere
-			
-				# VOTERS INFORMATION
-				ultra_violet_control = row[44] # Column name: PV03UVL
-				identified_with_document = row[45] # Column name: PV04IDK
-				finger_sprayed = row[46] # Column name: PV05GSH
-				sealed_ballot = row[47] # Column name: PV06VUL
-				how_many_voted_by_ten_AM = row[48] # Column name: PV07-10
-				how_many_voted_by_one_PM = row[49] # Column name: PV07-13
-				how_many_voted_by_four_PM = row[50] # Column name: PV07-16
-				how_many_voted_by_seven_PM = row[51] # Column name: PV07-19
-				number_of_voters_who_werent_in_the_voters_list = row[52] #column name:PV08ELV
-				number_of_conditional_voters = row[53] #column name: PV09NVK
-				number_of_assisted_voters = row[54] #column name: PV10VAS
-				at_least_three_kvv_members_present_in_polling_station = row[55] #column name: PV11-3AN
-				did_anyone_refused_the_ballot = row[56] #column name: PV12_Ref
-				how_many_refused_it = row[57] #column name: PV12IFPo
-				voting_process_comments = row[58] # column name: ProcVotKom
-			
-				# IRREGULARITY AND COMPLAINTS
-				attempt_to_vote_more_than_once = row[59] #Column name: PA01x1
-				allowed_to_vote = row[60] #Column name: PAifPO
-				take_picture_ofballot = row[61] #Column name: PA02Fot
-				inserted_more_than_one_ballot_in_the_box = row[62] #Column name: PA03M1F
-				unauthorized_persons_stayed_at_the_voting_station = row[63] #Column name: PA04PPD
-				violence_in_the_voting_station = row[64] #Column name: PA05DHU
-				politic_propaganda_inside_the_voting_station = row[65] #Column name: PA06PRP
-				more_than_one_person_behind_the_cabin = row[66] #Column name: PA07M1P
-				has_the_voting_station_been_closed_in_any_case = row[67] #Column name: PA08MBV
-				case_voting_outside_the_cabin = row[68] #Column name: PA09VJK
-				how_many_voters_complained_during_the_process = row[69] #Column name: PA10VAV
-				how_many_voters_filled_the_complaints_form = row[70] #Column name: PA11VMF
-				are_KVV_members_impartial_when_they_react_to_compliants = row[71] #column name PA12PAA
-				any_accident_happened_during_the_process = row[72] #Column name: PA13INC	
 			
 				# TIME OF COUNTING PROCESS	
 				when_voting_process_finished = row[73] #Column name PM01PPV
@@ -152,7 +71,6 @@ class DiaImporter2013(object):
 
 				other_parties = [other_parties_observers_1, other_parties_observers_2, other_parties_observers_3]
 				other_parties = filter(None, other_parties)
-
 		
 				ngo_observers = row[85] #column name PM05-OJQ
 				media_observers = row[86] #column name PM05-MED
@@ -188,28 +106,25 @@ class DiaImporter2013(object):
 			
 				# Counting process summary		
 				right_decision_for_doubtful_ballots = row[112]	#PNR01
-				are_the_disagreements_recorded_in_the_book = row[113]	#PNR02
-				when_counting_process_finished = row[114]	#PNR03
-				was_anyone_against_the_results = row[115]	#PNR04
+				are_the_disagreements_recorded_in_the_book = row[113] #PNR02
+				when_counting_process_finished = row[114] #PNR03
+				was_anyone_against_the_results = row[115] #PNR04
 				who_was_against_results = row[116]	#PNR04Kush
-				other_comments = row[117]	#PNR05Kom
+				other_comments = row[117] #PNR05Kom
 				additional_comments = row[134]	#KomShtese
 
 				# TODO: Figure out if invalid_ballots_in_box_xxx and ballots_set_aside_xxx are redundant.
 				# If invalid_ballots_in_box_xxx and ballots_set_aside_xxx refer to the same thing then we only need to count (invalid_ballots_in_box_xxx) and not the flag (ballots_set_aside_xxx)
 
+				polling_station = self.build_polling_station_object(row)
+				missing_materials = self.build_missing_materials_object(row)
+				voting_process = self.build_voting_process_object(row)
+				irregularities = self.build_irregularities_object(row)
+				complaints = self.build_complaints_object(row)
+				
 				observation = {
 					'_id': str(ObjectId()),
-					'pollingStation':{
-						'observerName' : observer_name,
-						'observerNumber' : observer_number,
-						'number': polling_station_number,
-						'roomNumber': room_number,
-						'name': polling_station_name,
-						'nameSlug': slugify(polling_station_name),
-						'commune': commune,
-						'communeSlug': slugify(commune)
-					},
+					'pollingStation': polling_station,
 					'onArrival':{
 						'materialLeftBehind': self.utils.to_boolean(material_left_behind),
 						'havePhysicalAccess': self.utils.to_boolean(have_physical_access)
@@ -225,17 +140,7 @@ class DiaImporter2013(object):
 								'female': self.utils.to_num(female) 
 							}
 						},
-					'missingMaterial':{
-						'uvLamp': self.utils.to_boolean(UV_lamp), 
-						'spray':self.utils.to_boolean( spray), 
-						'votersList': self.utils.to_boolean(voters_list),
-						'ballots': self.utils.to_boolean(ballots),	
-						'stamp': self.utils.to_boolean(stamp),
-						'ballotBox':self.utils.to_boolean(ballot_box),
-						'votersBook': self.utils.to_boolean(voters_book),
-						'votingCabin': self.utils.to_boolean(voting_cabin), 
-						'envelopsForConditionVoters': self.utils.to_boolean(envelops_condition_voters),
-					},
+					'missingMaterial': missing_materials,
 					'numberOfAcceptedBallots': self.utils.to_num(number_of_accepted_ballots), 
 					'numberOfVotersInVotingStationList':self.utils.to_num(number_of_voters_in_voting_station_list),
 					'numberOfVotingCabins':self.utils.to_num(number_of_voting_cabins),
@@ -244,60 +149,9 @@ class DiaImporter2013(object):
 					'registeredStrips': self.utils.to_boolean(did_they_register_serial_number_of_strips), 
 					'cabinsSafetyAndPrivacy': self.utils.to_boolean(cabins_provided_voters_safety_and_privancy),
 					},
-					'votingProcess':{
-						'whenVotingProcessStarted' : when_voting_process_started,
-						'observersPresent':{
-								'pdk': self.utils.to_boolean(pdk_observers_present),	
-								'ldk': self.utils.to_boolean(ldk_observers_present), 
-								'lvv': self.utils.to_boolean(lvv_observers_present),
-								'aak': self.utils.to_boolean(aak_observers_present),
-								'akr': self.utils.to_boolean(akr_observers_present),
-								'otherParties' : other_parties_observers,
-								'ngo': self.utils.to_boolean(ngo_observers_present),
-								'media': self.utils.to_boolean(media_observers_present),
-								'international': self.utils.to_boolean(international_observers_present),
-								'other': other_observers_present
-						},
-						'voters':{
-							'ultraVioletControl': self.utils.translate_frequency(ultra_violet_control),
-							'identifiedWithDocument': self.utils.translate_frequency(identified_with_document),
-							'fingerSprayed': self.utils.translate_frequency(finger_sprayed),
-							'sealedBallot': self.utils.translate_frequency(sealed_ballot),
-							'howManyVotedBy':{
-								'tenAM': self.utils.to_num(how_many_voted_by_ten_AM),
-								'onePM': self.utils.to_num(how_many_voted_by_one_PM),
-								'fourPM': self.utils.to_num(how_many_voted_by_four_PM),
-								'sevenPM': self.utils.to_num(how_many_voted_by_seven_PM)
-							},
-							'howManyVotersWerentInVotersList' : self.utils.to_num(number_of_voters_who_werent_in_the_voters_list),
-							'conditionalVoters' : self.utils.to_num(number_of_conditional_voters),
-							'numberOfAssistedVoters' : self.utils.to_num(number_of_assisted_voters),
-							'anyoneRefusedTheBallot' : self.utils.to_boolean(did_anyone_refused_the_ballot),
-							'howMany' : self.utils.to_num(how_many_refused_it)
-						
-						},
-						'atLeastThreeKvvMembersPresentInPollingStation' : self.utils.to_boolean(at_least_three_kvv_members_present_in_polling_station),
-						'votingProcessComments' : voting_process_comments
-					},
-					'irregularities':{
-						'attemptToVoteMoreThanOnce':self.utils.to_boolean(attempt_to_vote_more_than_once),
-						'allowedToVote':self.utils.to_boolean(allowed_to_vote),
-						'photographedBallot':self.utils.to_boolean(take_picture_ofballot),
-						'insertedMoreThanOneBallot':self.utils.to_boolean(inserted_more_than_one_ballot_in_the_box),
-					 	'unauthorizedPersonsStayedAtTheVotingStation': self.utils.to_boolean(unauthorized_persons_stayed_at_the_voting_station),
-						'violenceInTheVotingStation': self.utils.to_boolean(violence_in_the_voting_station),
-						'politicalPropagandaInsideTheVotingStation': self.utils.to_boolean(politic_propaganda_inside_the_voting_station),
-						'moreThanOnePersonBehindTheCabin': self.utils.to_boolean(more_than_one_person_behind_the_cabin),
-						'hasTheVotingStationBeenClosedInAnyCase': self.utils.to_boolean(has_the_voting_station_been_closed_in_any_case),
-						'caseVotingOutsideTheCabin': self.utils.to_boolean(case_voting_outside_the_cabin),
-						'areTheKvvMembersImpartialWhenTheyReactToComplaints' : self.utils.translate_frequency(are_KVV_members_impartial_when_they_react_to_compliants),
-						'anyAccidentHappenedDuringTheProcess': self.utils.to_boolean(any_accident_happened_during_the_process)
-					},					
-					'complaints':{
-						'total': self.utils.to_num(how_many_voters_complained_during_the_process),
-						'filled': self.utils.to_num(how_many_voters_filled_the_complaints_form)
-					},
-
+					'votingProcess': voting_process,
+					'irregularities': irregularities,				
+					'complaints': complaints,
 					'countingProcess':{	
 							'whenVotingProcessFinished':when_voting_process_finished,
 							'anyoneWaitingWhenPollingStationClosed': self.utils.to_boolean(anyone_waiting_when_polling_station_closed),
@@ -368,3 +222,104 @@ class DiaImporter2013(object):
 				num_of_created_docs = num_of_created_docs + 1
 
 		return num_of_created_docs
+
+
+	def build_polling_station_object(self, row):
+		polling_station = {
+			'observerName' : row[1], #column name EmriV
+			'observerNumber' : row[2], #colun name NrV
+			'number': row[3].lower(), # Column name nrQV
+			'roomNumber': row[4].lower(), # Column name NRVV
+			'commune': row[5].strip(), # Column name Komuna
+			'communeSlug': slugify(row[5].strip()),
+			'name': row[6].strip(), # Column name EQV
+			'nameSlug': slugify(row[6].strip()) 
+		}
+
+		return polling_station
+
+
+	def build_missing_materials_object(self, row):
+		missing_materials = {
+			'uvLamp': self.utils.to_boolean(row[15]), # Column name P05Lla
+			'spray':self.utils.to_boolean(row[16]), # Column name P05Ngj
+			'votersList': self.utils.to_boolean(row[17]), # Column name P05Lis
+			'ballots': self.utils.to_boolean(row[18]), # Column name P05Flv
+			'stamp': self.utils.to_boolean(row[19]), # Column name P05Vul
+			'ballotBox':self.utils.to_boolean(row[20]), # Column name P05Kut
+			'votersBook': self.utils.to_boolean(row[21]), # Column name P05Lib
+			'votingCabin': self.utils.to_boolean(row[22]), # Column name P05Kab
+			'envelopsForConditionVoters': self.utils.to_boolean(row[23]) # Column name P05ZFK 
+		}
+
+		return missing_materials
+
+
+	def build_voting_process_object(self, row):
+		voting_process = {
+			'whenVotingProcessStarted' : row[31], # Column name: PV1KHV
+			'observersPresent':{
+					'pdk': self.utils.to_boolean(row[32]), # Column name: PDK
+					'ldk': self.utils.to_boolean(row[33]), # Column name LDK
+					'lvv': self.utils.to_boolean(row[34]), # Column name LVV	
+					'aak': self.utils.to_boolean(row[35]), # Column name AAK
+					'akr': self.utils.to_boolean(row[36]), # Column name AKR
+					'otherParties' : filter(None, row[37:40]), # ParTj01, ParTj02, ParTj03
+					'ngo': self.utils.to_boolean(row[40]), # OJQ
+					'media': self.utils.to_boolean(row[41]), # Media
+					'international': self.utils.to_boolean(row[42]), # VzhND
+					'other': row[43] # VzhTjere
+			},
+			'voters':{
+				'ultraVioletControl': self.utils.translate_frequency(row[44]), # Column name: PV03UVL
+				'identifiedWithDocument': self.utils.translate_frequency(row[45]), # Column name: PV04IDK
+				'fingerSprayed': self.utils.translate_frequency(row[46]), # Column name: PV05GSH
+				'sealedBallot': self.utils.translate_frequency(row[47]), # Column name: PV06VUL
+				'howManyVotedBy':{
+					'tenAM': self.utils.to_num(row[48]), # Column name: PV07-10
+					'onePM': self.utils.to_num(row[49]), # Column name: PV07-13
+					'fourPM': self.utils.to_num(row[50]), # Column name: PV07-16
+					'sevenPM': self.utils.to_num(row[51]) # Column name: PV07-19
+				},
+				'notInVotersList' : self.utils.to_num(row[52]),  #column name:PV08ELV
+				'conditional' : self.utils.to_num(row[53]), #column name: PV09NVK
+				'assisted' : self.utils.to_num(row[54]), #column name: PV10VAS
+				'ballot' : {
+					'refused': self.utils.to_boolean(row[56]), #column name: PV12_Ref
+					'count': self.utils.to_num(row[57]) #column name: PV12IFPo
+				}
+			},
+			'atLeastThreeKvvMembersPresentInPollingStation' : self.utils.to_boolean(row[55]), #column name: PV11-3AN
+			'comments' : row[58]  # column name: ProcVotKom
+		}
+
+		return voting_process
+
+
+	def build_irregularities_object(self, row):
+		irregularities = {
+			'attemptToVoteMoreThanOnce':self.utils.to_boolean(row[59]), #Column name: PA01x1
+			'allowedToVote':self.utils.to_boolean(row[60]), #Column name: PAifPO
+			'photographedBallot':self.utils.to_boolean(row[61]), #Column name: PA02Fot
+			'insertedMoreThanOneBallot':self.utils.to_boolean(row[62]), #Column name: PA03M1F
+		 	'unauthorizedPersonsStayedAtTheVotingStation': self.utils.to_boolean(row[63]), #Column name: PA04PPD
+			'violenceInTheVotingStation': self.utils.to_boolean(row[64]), #Column name: PA05DHU
+			'politicalPropagandaInsideTheVotingStation': self.utils.to_boolean(row[65]), #Column name: PA06PRP
+			'moreThanOnePersonBehindTheCabin': self.utils.to_boolean(row[66]),  #Column name: PA07M1P
+			'hasTheVotingStationBeenClosedInAnyCase': self.utils.to_boolean(row[67]), #Column name: PA08MBV
+			'caseVotingOutsideTheCabin': self.utils.to_boolean(row[68]), #Column name: PA09VJK
+			'areTheKvvMembersImpartialWhenTheyReactToComplaints' : self.utils.translate_frequency(row[71]),  #column name PA12PAA
+			'anyAccidentHappenedDuringTheProcess': self.utils.to_boolean(row[72]) #Column name: PA13INC
+		}
+
+		return irregularities
+
+
+	def build_complaints_object(self, row):
+
+		complaints = {
+			'total': self.utils.to_num(row[69]), # Column name: PA10VAV
+			'filled': self.utils.to_num(row[70]) # Column name: PA11VMF
+		}
+
+		return complaints
