@@ -19,11 +19,14 @@ Run
 2. Run the importer:
 
 Import Democracy in Action's 2013 local elections monitoring data:
+
 	bash run.sh --organization=dia --electionYear=2013 --electionType=local-elections --electionRound=first-round
 
 Import Democracy in Action's 2013 local elections monitoring data:
+
 	bash run.sh --organization=dia --electionYear=2013 --electionType=local-elections --electionRound=second-round
 
 Import Democracy in Action's 2014 general elections monitoring data:
+
 	bash run.sh --organization=dia --electionYear=2014 --electionType=general-elections --electionRound=first-round
 
