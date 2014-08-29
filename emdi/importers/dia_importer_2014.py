@@ -1,6 +1,6 @@
 class DiaImporter2014(object):
 
-	def __init__(self, collection_name, csv_filepath):
+	def __init__(self):
 		pass
 
 	def run(self):
