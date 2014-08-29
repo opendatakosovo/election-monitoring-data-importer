@@ -1,2 +1,2 @@
 source ./venv/bin/activate
-python parser.py "$@"
+python run_importer.py "$@"
