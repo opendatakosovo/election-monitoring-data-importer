@@ -36,13 +36,20 @@ def import_data():
 		# FIXME: Implement AbstractFactory pattern to instanciate appropriate importer object
 		if organization == 'dia':
 			if election_year == '2013':
-				importer = DiaImporter2013(csv_filepath, collection_name)
+				# FIXME: Passing utils as constructor argument because for some reason when
+				# we import it from DiaImporter2013 we get this error message:
+				# 		AttributeError: 'module' object has no attribute 'to_boolean'
+				#
+				# WHY?!?!
+				importer = DiaImporter2013(csv_filepath, collection_name, utils)
 
 			elif election_year == '2014':
 				importer = DiaImporter2014()
 
 		# Run the importer
-		importer.run()
+		rsp = importer.run()
+
+		print 'Done. Imported %s observation documents.' % rsp
 
 	else:
 		print 'No CSV data file exists for those given arguments.'

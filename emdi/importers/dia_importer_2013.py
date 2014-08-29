@@ -2,11 +2,15 @@ import csv
 from bson import ObjectId
 from slugify import slugify
 from pymongo import MongoClient
-from emdi import utils
+
+# FIXME: Passing utils as constructor argument because for some reason when we import it from DiaImporter2013 we get this error message:
+# 	AttributeError: 'module' object has no attribute 'to_boolean'
+#	WHY?!?!
+#from emdi import utils
 
 class DiaImporter2013(object):
 
-	def __init__(self, csv_filepath, collection_name):
+	def __init__(self, csv_filepath, collection_name, utils):
 		self.collection_name = collection_name
 		self.csv_filepath = csv_filepath
 
@@ -15,6 +19,11 @@ class DiaImporter2013(object):
 		# Clear collection prior to import.
 		self.mongo.kdi[collection_name].remove({})
 
+		# FIXME: Passing utils as constructor argument because for some reason when we import it from DiaImporter2013 we get this error message:
+		# 	AttributeError: 'module' object has no attribute 'to_boolean'
+		#	WHY?!?!
+		self.utils = utils
+
 
 	def run(self):
 		'''
@@ -22,6 +31,9 @@ class DiaImporter2013(object):
 		Creates Mongo document for each observation entry.
 		Stores generated JSON documents.
 		'''
+		
+		num_of_created_docs = 0
+
 		with open(self.csv_filepath, 'rb') as csvfile:
 			reader = csv.reader(csvfile)
 			# Skip the header
@@ -199,152 +211,152 @@ class DiaImporter2013(object):
 						'communeSlug': slugify(commune)
 					},
 					'onArrival':{
-						'materialLeftBehind': utils.to_boolean(material_left_behind),
-						'havePhysicalAccess': utils.to_boolean(have_physical_access)
+						'materialLeftBehind': self.utils.to_boolean(material_left_behind),
+						'havePhysicalAccess': self.utils.to_boolean(have_physical_access)
 					},
 					'preparation':{
 						'arrivalTime': arrival_time,
 						'votingMaterialsPlacedInAndOutVotingStation':{
-							'howToVoteInfo': utils.to_boolean(how_to_vote_info),
-							'listOfCandidates': utils.to_boolean(list_of_candidates), 
+							'howToVoteInfo': self.utils.to_boolean(how_to_vote_info),
+							'listOfCandidates': self.utils.to_boolean(list_of_candidates), 
 							'whenPreparationStarted': when_preparation_start,
 							'kvvMembers':{
-								'total': utils.to_num(number_KVV_members), 
-								'female': utils.to_num(female) 
+								'total': self.utils.to_num(number_KVV_members), 
+								'female': self.utils.to_num(female) 
 							}
 						},
 					'missingMaterial':{
-						'uvLamp': utils.to_boolean(UV_lamp), 
-						'spray':utils.to_boolean( spray), 
-						'votersList': utils.to_boolean(voters_list),
-						'ballots': utils.to_boolean(ballots),	
-						'stamp': utils.to_boolean(stamp),
-						'ballotBox':utils.to_boolean(ballot_box),
-						'votersBook': utils.to_boolean(voters_book),
-						'votingCabin': utils.to_boolean(voting_cabin), 
-						'envelopsForConditionVoters': utils.to_boolean(envelops_condition_voters),
+						'uvLamp': self.utils.to_boolean(UV_lamp), 
+						'spray':self.utils.to_boolean( spray), 
+						'votersList': self.utils.to_boolean(voters_list),
+						'ballots': self.utils.to_boolean(ballots),	
+						'stamp': self.utils.to_boolean(stamp),
+						'ballotBox':self.utils.to_boolean(ballot_box),
+						'votersBook': self.utils.to_boolean(voters_book),
+						'votingCabin': self.utils.to_boolean(voting_cabin), 
+						'envelopsForConditionVoters': self.utils.to_boolean(envelops_condition_voters),
 					},
-					'numberOfAcceptedBallots': utils.to_num(number_of_accepted_ballots), 
-					'numberOfVotersInVotingStationList':utils.to_num(number_of_voters_in_voting_station_list),
-					'numberOfVotingCabins':utils.to_num(number_of_voting_cabins),
-					'votingBoxShownAsEmpty': utils.to_boolean(votingbox_shown_empty),
-					'closedWithSafetyStrip':utils.to_boolean( closed_with_safetystrip), 
-					'registeredStrips': utils.to_boolean(did_they_register_serial_number_of_strips), 
-					'cabinsSafetyAndPrivacy': utils.to_boolean(cabins_provided_voters_safety_and_privancy),
+					'numberOfAcceptedBallots': self.utils.to_num(number_of_accepted_ballots), 
+					'numberOfVotersInVotingStationList':self.utils.to_num(number_of_voters_in_voting_station_list),
+					'numberOfVotingCabins':self.utils.to_num(number_of_voting_cabins),
+					'votingBoxShownAsEmpty': self.utils.to_boolean(votingbox_shown_empty),
+					'closedWithSafetyStrip':self.utils.to_boolean( closed_with_safetystrip), 
+					'registeredStrips': self.utils.to_boolean(did_they_register_serial_number_of_strips), 
+					'cabinsSafetyAndPrivacy': self.utils.to_boolean(cabins_provided_voters_safety_and_privancy),
 					},
 					'votingProcess':{
 						'whenVotingProcessStarted' : when_voting_process_started,
 						'observersPresent':{
-								'pdk': utils.to_boolean(pdk_observers_present),	
-								'ldk': utils.to_boolean(ldk_observers_present), 
-								'lvv': utils.to_boolean(lvv_observers_present),
-								'aak': utils.to_boolean(aak_observers_present),
-								'akr': utils.to_boolean(akr_observers_present),
+								'pdk': self.utils.to_boolean(pdk_observers_present),	
+								'ldk': self.utils.to_boolean(ldk_observers_present), 
+								'lvv': self.utils.to_boolean(lvv_observers_present),
+								'aak': self.utils.to_boolean(aak_observers_present),
+								'akr': self.utils.to_boolean(akr_observers_present),
 								'otherParties' : other_parties_observers,
-								'ngo': utils.to_boolean(ngo_observers_present),
-								'media': utils.to_boolean(media_observers_present),
-								'international': utils.to_boolean(international_observers_present),
+								'ngo': self.utils.to_boolean(ngo_observers_present),
+								'media': self.utils.to_boolean(media_observers_present),
+								'international': self.utils.to_boolean(international_observers_present),
 								'other': other_observers_present
 						},
 						'voters':{
-							'ultraVioletControl': utils.translate_frequency(ultra_violet_control),
-							'identifiedWithDocument': utils.translate_frequency(identified_with_document),
-							'fingerSprayed': utils.translate_frequency(finger_sprayed),
-							'sealedBallot': utils.translate_frequency(sealed_ballot),
+							'ultraVioletControl': self.utils.translate_frequency(ultra_violet_control),
+							'identifiedWithDocument': self.utils.translate_frequency(identified_with_document),
+							'fingerSprayed': self.utils.translate_frequency(finger_sprayed),
+							'sealedBallot': self.utils.translate_frequency(sealed_ballot),
 							'howManyVotedBy':{
-								'tenAM': utils.to_num(how_many_voted_by_ten_AM),
-								'onePM': utils.to_num(how_many_voted_by_one_PM),
-								'fourPM': utils.to_num(how_many_voted_by_four_PM),
-								'sevenPM': utils.to_num(how_many_voted_by_seven_PM)
+								'tenAM': self.utils.to_num(how_many_voted_by_ten_AM),
+								'onePM': self.utils.to_num(how_many_voted_by_one_PM),
+								'fourPM': self.utils.to_num(how_many_voted_by_four_PM),
+								'sevenPM': self.utils.to_num(how_many_voted_by_seven_PM)
 							},
-							'howManyVotersWerentInVotersList' : utils.to_num(number_of_voters_who_werent_in_the_voters_list),
-							'conditionalVoters' : utils.to_num(number_of_conditional_voters),
-							'numberOfAssistedVoters' : utils.to_num(number_of_assisted_voters),
-							'anyoneRefusedTheBallot' : utils.to_boolean(did_anyone_refused_the_ballot),
-							'howMany' : utils.to_num(how_many_refused_it)
+							'howManyVotersWerentInVotersList' : self.utils.to_num(number_of_voters_who_werent_in_the_voters_list),
+							'conditionalVoters' : self.utils.to_num(number_of_conditional_voters),
+							'numberOfAssistedVoters' : self.utils.to_num(number_of_assisted_voters),
+							'anyoneRefusedTheBallot' : self.utils.to_boolean(did_anyone_refused_the_ballot),
+							'howMany' : self.utils.to_num(how_many_refused_it)
 						
 						},
-						'atLeastThreeKvvMembersPresentInPollingStation' : utils.to_boolean(at_least_three_kvv_members_present_in_polling_station),
+						'atLeastThreeKvvMembersPresentInPollingStation' : self.utils.to_boolean(at_least_three_kvv_members_present_in_polling_station),
 						'votingProcessComments' : voting_process_comments
 					},
 					'irregularities':{
-						'attemptToVoteMoreThanOnce':utils.to_boolean(attempt_to_vote_more_than_once),
-						'allowedToVote':utils.to_boolean(allowed_to_vote),
-						'photographedBallot':utils.to_boolean(take_picture_ofballot),
-						'insertedMoreThanOneBallot':utils.to_boolean(inserted_more_than_one_ballot_in_the_box),
-					 	'unauthorizedPersonsStayedAtTheVotingStation': utils.to_boolean(unauthorized_persons_stayed_at_the_voting_station),
-						'violenceInTheVotingStation': utils.to_boolean(violence_in_the_voting_station),
-						'politicalPropagandaInsideTheVotingStation': utils.to_boolean(politic_propaganda_inside_the_voting_station),
-						'moreThanOnePersonBehindTheCabin': utils.to_boolean(more_than_one_person_behind_the_cabin),
-						'hasTheVotingStationBeenClosedInAnyCase': utils.to_boolean(has_the_voting_station_been_closed_in_any_case),
-						'caseVotingOutsideTheCabin': utils.to_boolean(case_voting_outside_the_cabin),
-						'areTheKvvMembersImpartialWhenTheyReactToComplaints' : utils.translate_frequency(are_KVV_members_impartial_when_they_react_to_compliants),
-						'anyAccidentHappenedDuringTheProcess': utils.to_boolean(any_accident_happened_during_the_process)
+						'attemptToVoteMoreThanOnce':self.utils.to_boolean(attempt_to_vote_more_than_once),
+						'allowedToVote':self.utils.to_boolean(allowed_to_vote),
+						'photographedBallot':self.utils.to_boolean(take_picture_ofballot),
+						'insertedMoreThanOneBallot':self.utils.to_boolean(inserted_more_than_one_ballot_in_the_box),
+					 	'unauthorizedPersonsStayedAtTheVotingStation': self.utils.to_boolean(unauthorized_persons_stayed_at_the_voting_station),
+						'violenceInTheVotingStation': self.utils.to_boolean(violence_in_the_voting_station),
+						'politicalPropagandaInsideTheVotingStation': self.utils.to_boolean(politic_propaganda_inside_the_voting_station),
+						'moreThanOnePersonBehindTheCabin': self.utils.to_boolean(more_than_one_person_behind_the_cabin),
+						'hasTheVotingStationBeenClosedInAnyCase': self.utils.to_boolean(has_the_voting_station_been_closed_in_any_case),
+						'caseVotingOutsideTheCabin': self.utils.to_boolean(case_voting_outside_the_cabin),
+						'areTheKvvMembersImpartialWhenTheyReactToComplaints' : self.utils.translate_frequency(are_KVV_members_impartial_when_they_react_to_compliants),
+						'anyAccidentHappenedDuringTheProcess': self.utils.to_boolean(any_accident_happened_during_the_process)
 					},					
 					'complaints':{
-						'total': utils.to_num(how_many_voters_complained_during_the_process),
-						'filled': utils.to_num(how_many_voters_filled_the_complaints_form)
+						'total': self.utils.to_num(how_many_voters_complained_during_the_process),
+						'filled': self.utils.to_num(how_many_voters_filled_the_complaints_form)
 					},
 
 					'countingProcess':{	
 							'whenVotingProcessFinished':when_voting_process_finished,
-							'anyoneWaitingWhenPollingStationClosed': utils.to_boolean(anyone_waiting_when_polling_station_closed),
-							'didTheyAllowThemToVote': utils.to_boolean(did_they_allow_them_to_vote),
+							'anyoneWaitingWhenPollingStationClosed': self.utils.to_boolean(anyone_waiting_when_polling_station_closed),
+							'didTheyAllowThemToVote': self.utils.to_boolean(did_they_allow_them_to_vote),
 							'whenCountingProcessStarted':when_counting_process_started,
 							'observers':{
-								'pdk': utils.to_boolean(pdk_observers),	
-								'ldk': utils.to_boolean(ldk_observers), 
-								'lvv': utils.to_boolean(lvv_observers),
-								'aak': utils.to_boolean(aak_observers),
-								'akr': utils.to_boolean(akr_observers),
+								'pdk': self.utils.to_boolean(pdk_observers),	
+								'ldk': self.utils.to_boolean(ldk_observers), 
+								'lvv': self.utils.to_boolean(lvv_observers),
+								'aak': self.utils.to_boolean(aak_observers),
+								'akr': self.utils.to_boolean(akr_observers),
 								'othersParties': other_parties,
-								'ngo': utils.to_boolean(ngo_observers),
-								'media': utils.to_boolean(media_observers),
-								'international': utils.to_boolean(international_observers),
+								'ngo': self.utils.to_boolean(ngo_observers),
+								'media': self.utils.to_boolean(media_observers),
+								'international': self.utils.to_boolean(international_observers),
 								'other': other_observers
 							},
 							'unauthorizedPersons':{
-								'present': utils.to_boolean(any_unauthorized_person_while_counting),
+								'present': self.utils.to_boolean(any_unauthorized_person_while_counting),
 								'who': who_were_these_unauthorized_persons
 							},
-							'didTheyHaveNiceViewInProcedures': utils.to_boolean(did_they_have_nice_view_in_procedures), #FIXME: Who is they? Put they in their own obect.
-							'didTheyControlSafetyStripBeforeOpeningBox': utils.to_boolean(did_they_control_safety_strip_before_opening_box),#FIXME: Who is they? 
-							'safetyStripsUntouched':utils.to_boolean(safety_strips_untouched),
-							'didTheyCountAndRegisterSignaturesInVotersList': utils.to_boolean(did_they_count_and_register_signitures_in_voters_list), #FIXME: Who is they? 
-							'whatIsTheNumberOfVotersInPollingStation': utils.to_num(whats_number_of_voters_in_that_polling_station),
-							'numberOfSignaturesInVotersList': utils.to_num(number_of_signatures_in_voters_list),
-							'didTheyCountAndRegisterUnusedBallots': utils.to_boolean(did_they_count_and_register_unused_ballots), #FIXME: Who is they? 
-							'didTheyCountAndRegisterUsedBallots': utils.to_boolean(did_they_count_and_register_used_ballots), #FIXME: Who is they? 
-							'didTheyVerifyAndRegisterSafetyStrip': utils.to_boolean(did_they_verify_and_register_safety_strips), #FIXME: Who is they? 
-							'votingMaterialsSetAside': utils.to_boolean(voting_materials_set_aside)
+							'didTheyHaveNiceViewInProcedures': self.utils.to_boolean(did_they_have_nice_view_in_procedures), #FIXME: Who is they? Put they in their own obect.
+							'didTheyControlSafetyStripBeforeOpeningBox': self.utils.to_boolean(did_they_control_safety_strip_before_opening_box),#FIXME: Who is they? 
+							'safetyStripsUntouched':self.utils.to_boolean(safety_strips_untouched),
+							'didTheyCountAndRegisterSignaturesInVotersList': self.utils.to_boolean(did_they_count_and_register_signitures_in_voters_list), #FIXME: Who is they? 
+							'whatIsTheNumberOfVotersInPollingStation': self.utils.to_num(whats_number_of_voters_in_that_polling_station),
+							'numberOfSignaturesInVotersList': self.utils.to_num(number_of_signatures_in_voters_list),
+							'didTheyCountAndRegisterUnusedBallots': self.utils.to_boolean(did_they_count_and_register_unused_ballots), #FIXME: Who is they? 
+							'didTheyCountAndRegisterUsedBallots': self.utils.to_boolean(did_they_count_and_register_used_ballots), #FIXME: Who is they? 
+							'didTheyVerifyAndRegisterSafetyStrip': self.utils.to_boolean(did_they_verify_and_register_safety_strips), #FIXME: Who is they? 
+							'votingMaterialsSetAside': self.utils.to_boolean(voting_materials_set_aside)
 						},
 					'ballots':{
 						'municipalAssembly':{
-							'total': utils.to_num(total_ballots_mae),
+							'total': self.utils.to_num(total_ballots_mae),
 							'invalid':{
-								'inBallotBox': utils.to_num(invalid_ballots_in_box_mae),
-								'setAside': utils.to_boolean(ballots_set_aside_mae)
+								'inBallotBox': self.utils.to_num(invalid_ballots_in_box_mae),
+								'setAside': self.utils.to_boolean(ballots_set_aside_mae)
 							},
-						'didTheyPutVotesInTheBag': utils.to_boolean(after_counting_did_they_put_votes_in_the_bag)
+						'didTheyPutVotesInTheBag': self.utils.to_boolean(after_counting_did_they_put_votes_in_the_bag)
 						},
 						'mayoral':{
-							'total': utils.to_num(total_ballots_me),
+							'total': self.utils.to_num(total_ballots_me),
 							'invalid':{
-								'inBallotBox': utils.to_num(invalid_ballots_in_box_me),
-								'setAside': utils.to_boolean(ballots_set_aside_me)
+								'inBallotBox': self.utils.to_num(invalid_ballots_in_box_me),
+								'setAside': self.utils.to_boolean(ballots_set_aside_me)
 							},
-							'putInTransparentBag': utils.to_boolean(bollots_put_in_transaparent_bag),
-							'conditionBallots': utils.to_num(condition_ballots),
-							'numberOfSignaturesInConditionVotingList': utils.to_num(number_of_signitures_in_condtion_voting_list),
-							'didTheyCountEnvelopesSeparatly': utils.to_boolean(did_they_count_envelopes_separatly)
+							'putInTransparentBag': self.utils.to_boolean(bollots_put_in_transaparent_bag),
+							'conditionBallots': self.utils.to_num(condition_ballots),
+							'numberOfSignaturesInConditionVotingList': self.utils.to_num(number_of_signitures_in_condtion_voting_list),
+							'didTheyCountEnvelopesSeparatly': self.utils.to_boolean(did_they_count_envelopes_separatly)
 						}
 					},
 					'countingProcessSummary': {
-						'doubtfulBallotsProperlyHandled': utils.translate_frequency(right_decision_for_doubtful_ballots),
-						'disgreementsRecorded': utils.translate_frequency(are_the_disagreements_recorded_in_the_book),
+						'doubtfulBallotsProperlyHandled': self.utils.translate_frequency(right_decision_for_doubtful_ballots),
+						'disgreementsRecorded': self.utils.translate_frequency(are_the_disagreements_recorded_in_the_book),
 						'countingProcessFinishTime':when_counting_process_finished,
 						'oppositions':{
-							'anyoneOpposed': utils.to_boolean(was_anyone_against_the_results),
+							'anyoneOpposed': self.utils.to_boolean(was_anyone_against_the_results),
 							'who': who_was_against_results
 						},
 						'comments':other_comments
@@ -352,4 +364,7 @@ class DiaImporter2013(object):
 				} 
 			
 				# Insert document
-				mongo.kdi[self.collection_name].insert(observation)
+				self.mongo.kdi[self.collection_name].insert(observation)
+				num_of_created_docs = num_of_created_docs + 1
+
+		return num_of_created_docs
