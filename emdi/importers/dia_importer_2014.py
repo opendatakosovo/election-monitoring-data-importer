@@ -26,16 +26,32 @@ class DiaImporter2014(DiaImporter):
 			# Iterate through the rows, retrieve desired values.
 			for row in reader:
 
-				polling_station = self.build_polling_station_object(row)
-				missing_materials = self.build_missing_materials_object(row)
-				voting_process = self.build_voting_process_object(row)
-				irregularities = self.build_irregularities_object(row)
-				complaints = self.build_complaints_object(row)
+				# Build JSON objects.
+				# The methods that build the data object are implemted in this class
+				# The methods that build the JSON object are implmenet in the super-class
 
+				polling_station_data = self.build_polling_station_data(row) # Implementation in this class
+				polling_station = self.build_polling_station_object(polling_station_data) # Implementation in the super-class
+
+				preparation_data = self.build_preparation_data(row) # Implementation in this class
+				missing_materials_data = self.build_missing_materials_data(row) # Implementation in this class
+				preparation = self.build_preparation_object(preparation_data, missing_materials_data) # Implementation in the super-class
+
+				# Different implementation required to build the data object for each sub-class.
+				# So in this case, we don't create a generic data object creation method in the super-class
+				voting_process = self.build_voting_process_object(row) # Implementation in this class
+
+				irregularities_data = self.build_irregularities_data(row) # Implementation in this class
+				irregularities = self.build_irregularities_object(irregularities_data) # Implementation in the super-class
+
+				complaints_data = self.build_complaints_data(row) # Implementation in this class
+				complaints = self.build_complaints_object(complaints_data) # Implementation in the super-class
+
+				# Build observation documents
 				observation = {
 					'_id': str(ObjectId()),
 					'pollingStation': polling_station,
-					'missingMaterial': missing_materials,
+					'preparation': preparation,
 					'votingProcess': voting_process,
 					'irregularities': irregularities,				
 					'complaints': complaints,
@@ -49,35 +65,47 @@ class DiaImporter2014(DiaImporter):
 		return num_of_created_docs
 
 
-	def build_polling_station_object(self, row):
-		polling_station = {
-			'observerName' : row[0], #column name emri_mbiemri
-			'observerNumber' : row[1], #colun name nr_vezhguesi
-			'number': row[4].lower(), # Column name nr_qv
-			'roomNumber': row[5].lower(), # Column name nr_vv
-			'commune': row[2].strip(), # Column name komuna
-			'communeSlug': slugify(row[2].strip()),
-			'name': row[3].strip(), # Column name emri_qv
-			'nameSlug': slugify(row[3].strip()) 
-		}
+	def build_polling_station_data(self, row):
+		data = [
+			row[0], # column name: emri_mbiemri
+			row[1], # colun name: nr_vezhguesi
+			row[4], # Column name: nr_qv
+			row[5], # Column name: nr_vv
+			row[2], # Column name: komuna
+			row[3], # Column name: emri_qv
+		]
 
-		return polling_station
+		return data
 
 
-	def build_missing_materials_object(self, row):
-		missing_materials = {
-			'uvLamp': self.utils.to_boolean(row[15]), # Column name 
-			'spray':self.utils.to_boolean(row[16]), # Column name 
-			'votersList': self.utils.to_boolean(row[17]), # Column name 
-			'ballots': self.utils.to_boolean(row[18]), # Column name 
-			'stamp': self.utils.to_boolean(row[19]), # Column name 
-			'ballotBox':self.utils.to_boolean(row[20]), # Column name 
-			'votersBook': self.utils.to_boolean(row[21]), # Column name 
-			'votingCabin': self.utils.to_boolean(row[22]), # Column name 
-			'envelopsForConditionVoters': self.utils.to_boolean(row[23]) # Column name 
-		}
+	def build_preparation_data(self, row):
+		data = [
+			row[9], # column name: pyetja_3 
+			row[7], # column name: pyetja_4 #FIXME: Need two 4s. Where are they?
+			row[7], # column name: pyetja_4 #FIXME: Need two 4s. Where are they?
+			row[8], # column name: pyetja_5
+			row[11],# column name: pyetja_6
+			row[12] # column name: pyetja_femra
+		]
 
-		return missing_materials
+		return data
+
+
+
+	def build_missing_materials_data(self, row):
+		data = [
+			row[15],
+			row[16],
+			row[17],
+			row[18],
+			row[19],
+			row[20],
+			row[21],
+			row[22],
+			row[23]
+		]
+
+		return data
 
 
 	def build_voting_process_object(self, row):
@@ -111,12 +139,12 @@ class DiaImporter2014(DiaImporter):
 				'conditional' : self.utils.to_num(row[31]), #column name
 				'assisted' : self.utils.to_num(row[32]), #column name
 				# NOT IN FORM
-				#'ballot' : {
+				#'refusedBallot' : {
 				#	'refused': self.utils.to_boolean(row[56]), #column name
 				#	'count': self.utils.to_num(row[57]) #column name 
 				#}
 			},
-			'atLeastThreeKvvMembersPresentInPollingStation' : self.utils.to_boolean(row[33]), #column name
+			'atLeastThreePscMembersPresentInPollingStation' : self.utils.to_boolean(row[33]), #column name
 			# IN FORM BUT NOT STORED
 			#'comments' : row[58]  # column name
 		}
@@ -124,32 +152,30 @@ class DiaImporter2014(DiaImporter):
 		return voting_process
 
 
-	def build_irregularities_object(self, row):
-		irregularities = {
-			# Value can be 0, 1, 2. Figure out which ones are No, Yes/No, and Yes/Yes
-			'attemptToVoteMoreThanOnce':self.utils.to_boolean(row[33]), #Column name: PA01x1
-			'allowedToVote':self.utils.to_boolean_second(row[33]), #Column name: PAifPO
+	def build_irregularities_data(self, row):
+		data = [
+			# TODO: Value can be 0, 1, 2. Figure out which ones are No, Yes/No, and Yes/Yes
+			self.utils.to_boolean(row[33]),
+			self.utils.to_boolean_second(row[33]),
+			row[34],
+			row[35],
+		 	row[36],
+			row[37],
+			row[38],
+			row[39],
+			row[40],
+			row[41],
+			row[45]
+		]
 
-			'photographedBallot':self.utils.to_boolean(row[34]), #Column name: PA02Fot
-			'insertedMoreThanOneBallot':self.utils.to_boolean(row[35]), #Column name: PA03M1F
-		 	'unauthorizedPersonsStayedAtTheVotingStation': self.utils.to_boolean(row[36]), #Column name: PA04PPD
-			'violenceInTheVotingStation': self.utils.to_boolean(row[37]), #Column name: PA05DHU
-			'politicalPropagandaInsideTheVotingStation': self.utils.to_boolean(row[38]), #Column name: PA06PRP
-			'moreThanOnePersonBehindTheCabin': self.utils.to_boolean(row[39]),  #Column name: PA07M1P
-			'hasTheVotingStationBeenClosedInAnyCase': self.utils.to_boolean(row[40]), #Column name: PA08MBV
-			'caseVotingOutsideTheCabin': self.utils.to_boolean(row[41]), #Column name: PA09VJK
-			'areTheKvvMembersImpartialWhenTheyReactToComplaints' : self.utils.translate_frequency(row[44]),  #column name PA12PAA
-			'anyAccidentHappenedDuringTheProcess': self.utils.to_boolean(row[45]) #Column name: PA13INC
-		}
-
-		return irregularities
+		return data
 
 
-	def build_complaints_object(self, row):
+	def build_complaints_data(self, row):
+		data = [
+			row[42], # Column name: PA10VAV
+			row[43], # Column name: PA11VMF
+			row[44]  #column name PA12PAA
+		]
 
-		complaints = {
-			'total': self.utils.to_num(row[42]), # Column name: PA10VAV
-			'filled': self.utils.to_num(row[43]) # Column name: PA11VMF
-		}
-
-		return complaints
+		return data

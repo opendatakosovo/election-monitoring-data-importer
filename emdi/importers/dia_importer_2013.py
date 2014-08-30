@@ -37,13 +37,7 @@ class DiaImporter2013(DiaImporter):
 				material_left_behind = row[7] # Column name: 01gja
 				have_physical_access = row[8] # Column name: 02gja
 			
-				# ARRIVAL TIME
-				arrival_time = row[9] # column name: P01KA
-				how_to_vote_info = row[10] # column name: P02A
-				list_of_candidates = row[11] # column name: P02B
-				when_preparation_start = row[12] # column name:P03Perg
-				number_KVV_members = row[13] #column name:P04KVV
-				female = row[14] #column name:P04Fem
+				
 
 				number_of_accepted_ballots = row[24] # column name:P06NFP
 				number_of_voters_in_voting_station_list = row[25] # column name: P07VNL
@@ -53,7 +47,7 @@ class DiaImporter2013(DiaImporter):
 				did_they_register_serial_number_of_strips = row[29] # column name:P11NRS
 				cabins_provided_voters_safety_and_privancy = row[30] # column name:P12KFV
 
-			
+
 				# TIME OF COUNTING PROCESS	
 				when_voting_process_finished = row[73] #Column name PM01PPV
 				anyone_waiting_when_polling_station_closed = row[74] #column name PM02PJA
@@ -116,12 +110,29 @@ class DiaImporter2013(DiaImporter):
 				# TODO: Figure out if invalid_ballots_in_box_xxx and ballots_set_aside_xxx are redundant.
 				# If invalid_ballots_in_box_xxx and ballots_set_aside_xxx refer to the same thing then we only need to count (invalid_ballots_in_box_xxx) and not the flag (ballots_set_aside_xxx)
 
-				polling_station = self.build_polling_station_object(row)
-				missing_materials = self.build_missing_materials_object(row)
-				voting_process = self.build_voting_process_object(row)
-				irregularities = self.build_irregularities_object(row)
-				complaints = self.build_complaints_object(row)
-				
+
+				# Build JSON objects.
+				# The methods that build the data object are implemted in this class
+				# The methods that build the JSON object are implmenet in the super-class
+
+				polling_station_data = self.build_polling_station_data(row) # Implementation in this class
+				polling_station = self.build_polling_station_object(polling_station_data) # Implementation in the super-class
+
+				preparation_data = self.build_preparation_data(row) # Implementation in this class
+				missing_materials_data = self.build_missing_materials_data(row) # Implementation in this class
+				preparation = self.build_preparation_object(preparation_data, missing_materials_data) # Implementation in the super-class
+
+				# Different implementation required to build the data object for each sub-class.
+				# So in this case, we don't create a generic data object creation method in the super-class
+				voting_process = self.build_voting_process_object(row) # Implementation in this class
+
+				irregularities_data = self.build_irregularities_data(row) # Implementation in this class
+				irregularities = self.build_irregularities_object(irregularities_data) # Implementation in the super-class
+
+				complaints_data = self.build_complaints_data(row) # Implementation in this class
+				complaints = self.build_complaints_object(complaints_data) # Implementation in the super-class
+
+
 				observation = {
 					'_id': str(ObjectId()),
 					'pollingStation': polling_station,
@@ -129,18 +140,7 @@ class DiaImporter2013(DiaImporter):
 						'materialLeftBehind': self.utils.to_boolean(material_left_behind),
 						'havePhysicalAccess': self.utils.to_boolean(have_physical_access)
 					},
-					'preparation':{
-						'arrivalTime': arrival_time,
-						'votingMaterialsPlacedInAndOutVotingStation':{
-							'howToVoteInfo': self.utils.to_boolean(how_to_vote_info),
-							'listOfCandidates': self.utils.to_boolean(list_of_candidates), 
-							'whenPreparationStarted': when_preparation_start,
-							'kvvMembers':{
-								'total': self.utils.to_num(number_KVV_members), 
-								'female': self.utils.to_num(female) 
-							}
-						},
-					'missingMaterial': missing_materials,
+					'preparation': preparation,
 					'numberOfAcceptedBallots': self.utils.to_num(number_of_accepted_ballots), 
 					'numberOfVotersInVotingStationList':self.utils.to_num(number_of_voters_in_voting_station_list),
 					'numberOfVotingCabins':self.utils.to_num(number_of_voting_cabins),
@@ -148,7 +148,6 @@ class DiaImporter2013(DiaImporter):
 					'closedWithSafetyStrip':self.utils.to_boolean( closed_with_safetystrip), 
 					'registeredStrips': self.utils.to_boolean(did_they_register_serial_number_of_strips), 
 					'cabinsSafetyAndPrivacy': self.utils.to_boolean(cabins_provided_voters_safety_and_privancy),
-					},
 					'votingProcess': voting_process,
 					'irregularities': irregularities,				
 					'complaints': complaints,
@@ -224,35 +223,46 @@ class DiaImporter2013(DiaImporter):
 		return num_of_created_docs
 
 
-	def build_polling_station_object(self, row):
-		polling_station = {
-			'observerName' : row[1], #column name EmriV
-			'observerNumber' : row[2], #colun name NrV
-			'number': row[3].lower(), # Column name nrQV
-			'roomNumber': row[4].lower(), # Column name NRVV
-			'commune': row[5].strip(), # Column name Komuna
-			'communeSlug': slugify(row[5].strip()),
-			'name': row[6].strip(), # Column name EQV
-			'nameSlug': slugify(row[6].strip()) 
-		}
+	def build_polling_station_data(self, row):
+		data = [
+			row[1], #column name EmriV
+			row[2], #colun name NrV
+			row[3], # Column name nrQV
+			row[4], # Column name NRVV
+			row[5], # Column name Komuna
+			row[6], # Column name EQV
+		]
 
-		return polling_station
+		return data
 
 
-	def build_missing_materials_object(self, row):
-		missing_materials = {
-			'uvLamp': self.utils.to_boolean(row[15]), # Column name P05Lla
-			'spray':self.utils.to_boolean(row[16]), # Column name P05Ngj
-			'votersList': self.utils.to_boolean(row[17]), # Column name P05Lis
-			'ballots': self.utils.to_boolean(row[18]), # Column name P05Flv
-			'stamp': self.utils.to_boolean(row[19]), # Column name P05Vul
-			'ballotBox':self.utils.to_boolean(row[20]), # Column name P05Kut
-			'votersBook': self.utils.to_boolean(row[21]), # Column name P05Lib
-			'votingCabin': self.utils.to_boolean(row[22]), # Column name P05Kab
-			'envelopsForConditionVoters': self.utils.to_boolean(row[23]) # Column name P05ZFK 
-		}
+	def build_preparation_data(self, row):
+		data = [
+			row[9],  # column name: P01KA
+			row[10], # column name: P02A
+			row[11], # column name: P02B
+			row[12], # column name: P03Perg
+			row[13], # column name: P04KVV
+			row[14]  # column name: P04Fem
+		]
 
-		return missing_materials
+		return data;
+
+
+	def build_missing_materials_data(self, row):
+		data = [
+			row[15], # Column name P05Lla
+			row[16], # Column name P05Ngj
+			row[17], # Column name P05Lis
+			row[18], # Column name P05Flv
+			row[19], # Column name P05Vul
+			row[20], # Column name P05Kut
+			row[21], # Column name P05Lib
+			row[22], # Column name P05Kab
+			row[23]  # Column name P05ZFK 
+		]
+
+		return data;
 
 
 	def build_voting_process_object(self, row):
@@ -284,42 +294,41 @@ class DiaImporter2013(DiaImporter):
 				'notInVotersList' : self.utils.to_num(row[52]),  #column name:PV08ELV
 				'conditional' : self.utils.to_num(row[53]), #column name: PV09NVK
 				'assisted' : self.utils.to_num(row[54]), #column name: PV10VAS
-				'ballot' : {
+				'refusedBallot' : {
 					'refused': self.utils.to_boolean(row[56]), #column name: PV12_Ref
 					'count': self.utils.to_num(row[57]) #column name: PV12IFPo
 				}
 			},
-			'atLeastThreeKvvMembersPresentInPollingStation' : self.utils.to_boolean(row[55]), #column name: PV11-3AN
+			'atLeastThreePscMembersPresentInPollingStation' : self.utils.to_boolean(row[55]), #column name: PV11-3AN
 			'comments' : row[58]  # column name: ProcVotKom
 		}
 
 		return voting_process
 
 
-	def build_irregularities_object(self, row):
-		irregularities = {
-			'attemptToVoteMoreThanOnce':self.utils.to_boolean(row[59]), #Column name: PA01x1
-			'allowedToVote':self.utils.to_boolean(row[60]), #Column name: PAifPO
-			'photographedBallot':self.utils.to_boolean(row[61]), #Column name: PA02Fot
-			'insertedMoreThanOneBallot':self.utils.to_boolean(row[62]), #Column name: PA03M1F
-		 	'unauthorizedPersonsStayedAtTheVotingStation': self.utils.to_boolean(row[63]), #Column name: PA04PPD
-			'violenceInTheVotingStation': self.utils.to_boolean(row[64]), #Column name: PA05DHU
-			'politicalPropagandaInsideTheVotingStation': self.utils.to_boolean(row[65]), #Column name: PA06PRP
-			'moreThanOnePersonBehindTheCabin': self.utils.to_boolean(row[66]),  #Column name: PA07M1P
-			'hasTheVotingStationBeenClosedInAnyCase': self.utils.to_boolean(row[67]), #Column name: PA08MBV
-			'caseVotingOutsideTheCabin': self.utils.to_boolean(row[68]), #Column name: PA09VJK
-			'areTheKvvMembersImpartialWhenTheyReactToComplaints' : self.utils.translate_frequency(row[71]),  #column name PA12PAA
-			'anyAccidentHappenedDuringTheProcess': self.utils.to_boolean(row[72]) #Column name: PA13INC
-		}
+	def build_irregularities_data(self, row):
+		data = [
+			self.utils.to_boolean(row[59]), #Column name: PA01x1
+			self.utils.to_boolean(row[60]), #Column name: PAifPO
+			row[61], #Column name: PA02Fot
+			row[62], #Column name: PA03M1F
+		 	row[63], #Column name: PA04PPD
+			row[64], #Column name: PA05DHU
+			row[65], #Column name: PA06PRP
+			row[66], #Column name: PA07M1P
+			row[67], #Column name: PA08MBV
+			row[68], #Column name: PA09VJK
+			row[72]  #Column name: PA13INC
+		]
 
-		return irregularities
+		return data
 
 
-	def build_complaints_object(self, row):
+	def build_complaints_data(self, row):
+		data = [
+			row[69], # Column name: PA10VAV
+			row[70], # Column name: PA11VMF
+			row[71]  #column name PA12PAA
+		]
 
-		complaints = {
-			'total': self.utils.to_num(row[69]), # Column name: PA10VAV
-			'filled': self.utils.to_num(row[70]) # Column name: PA11VMF
-		}
-
-		return complaints
+		return data
