@@ -19,21 +19,19 @@ class DiaImporter(object):
 
 	def build_polling_station_object(self, data):
 		polling_station = {
+			'name': data[5].strip(),
+			'slug': slugify(data[5].strip()),
+			'number': data[2].upper(),
+			'room': data[3].upper(),
 			'observer':{
 				'name' : data[0].strip(),
 				'number' : data[1].strip(),
 				'slug' : slugify(data[0].strip()),
 			},
-			'name':{
-				'value': data[5].strip(),
-				'slug': slugify(data[5].strip())
-			},
 			'commune':{
 				'name': data[4].strip(),
 				'slug': slugify(data[4].strip())
-			},
-			'number': data[2].upper(),
-			'room': data[3].upper(),
+			}
 		}
 
 		return polling_station
