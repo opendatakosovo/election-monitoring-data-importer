@@ -61,21 +61,21 @@ class Utils(object):
 	   
 	@staticmethod
 	def translate_frequency(term):
-		''' Translate frequence term into english. e.g. 'Gjithmone' is 'Always'
+		''' Translate frequence term into english. e.g. 'Gjithmone' is 'always'
 		'''
 		# Use startswith because we don't want to deal with encoding issues (e umlaut).
 		# There is probably a more elegant way to deal with this.
 		if term.startswith('Gjithmon') or term == '1':
-			return 'Always'
+			return 'always'
 
 		elif term.startswith('Nganj') or term == '2':
-			return 'Sometimes'
+			return 'sometimes'
 
 		elif term.startswith('Rrall') or term == '3':
-			return 'Rarely'
+			return 'rarely'
 
 		elif term.startswith('Aspak') or term == '4':
-			return 'Never'
+			return 'never'
 
 		else:
 			return ''

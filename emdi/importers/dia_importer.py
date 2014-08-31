@@ -217,7 +217,7 @@ class DiaImporter(object):
 
 
 	def build_missing_materials_object(self, data):
-		missing_material = {}
+		missing_materials = {}
 
 		if len(data) > 0:
 			missing_materials = {
@@ -232,7 +232,7 @@ class DiaImporter(object):
 				'envelopesForConditionalVote': self.utils.to_boolean(data[8])
 			}
 
-		return missing_material
+		return missing_materials
 	
 
 	def build_voting_process_object(self, voting_process_data, observers_data, refused_ballots_data):
