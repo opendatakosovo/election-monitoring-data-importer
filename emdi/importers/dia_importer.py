@@ -17,24 +17,28 @@ class DiaImporter(object):
 		#	WHY?!?!
 		self.utils = utils
 
-	def build_polling_station_object(self, data):
-		polling_station = {
-			'name': data[5].strip(),
+	def build_on_arrival_object(self, data):
+		on_arrival = {
+			'politicalPropagandaRemoved': self.utils.to_boolean(data[0]), #FIXME: Check if this is correct field for 2013
+			'disabledHavePhysicalAccess': self.utils.to_boolean(data[1])
+		}
+
+		return on_arrival
+
+
+	def build_voting_center_object(self, data):
+		voting_center = {
+			'name': data[5].strip(), # Polling Centre Name
 			'slug': slugify(data[5].strip()),
-			'number': data[2].upper(),
-			'room': data[3].upper(),
-			'observer':{
-				'name' : data[0].strip(),
-				'number' : data[1].strip(),
-				'slug' : slugify(data[0].strip()),
-			},
+			'number': data[2].upper(), # Number of Voting Centre
+			'stationNumber': data[3].upper(), # Voting Station Number
 			'commune':{
-				'name': data[4].strip(),
+				'name': data[4].strip(), # Municipality
 				'slug': slugify(data[4].strip())
 			}
 		}
 
-		return polling_station
+		return voting_center
 
 
 	def build_preparation_object(self, prep_data, missing_material_data):
@@ -47,9 +51,20 @@ class DiaImporter(object):
 			'preparationStartTime': prep_data[3],
 			'pscMembers':{
 				'total': self.utils.to_num(prep_data[4]),
-				'female': self.utils.to_num(prep_data[5])
+				'women': self.utils.to_num(prep_data[5])
 			},
-			'missingMaterials': self.build_missing_materials_object(missing_material_data)
+			'missingMaterials': self.build_missing_materials_object(missing_material_data),
+			'ballotsReceived': self.utils.to_num(prep_data[6]), # "Number of ballots received"
+			'votersInVotersList': self.utils.to_num(prep_data[7]),  # "Number of voters in voters' list at the polling station"
+			'votingBooths':{
+				'total': self.utils.to_num(prep_data[8]), # "Number of voting booths"
+				'placementEnsuredSecrecy': self.utils.to_boolean(prep_data[9]), # "Are the booths placed in such a way to ensure vote secrecy?"
+			},
+			'ballotBoxes':{
+				'shownAsEmpty': self.utils.to_boolean(prep_data[10]), # "Was the empty ballot box shown as empty before voting starts?"
+				'sealedWithSecuritySeals':self.utils.to_boolean(prep_data[11]), # "Were the ballot boxes sealed with security seals?"
+				'sealsRecorded': self.utils.to_boolean(prep_data[12]), # "Were the serial numbers of seals recorded in the appropriate book?"
+			}
 		}
 
 		return preparation
@@ -104,9 +119,11 @@ class DiaImporter(object):
 
 		return voting_process
 
+
 	def build_observers_object(self, data):
 		# This object is an array, so just return the given data array.
 		return data
+
 
 	def build_refused_ballots_object(self, data):
 		refused_ballots = {}
@@ -114,16 +131,17 @@ class DiaImporter(object):
 		if len(data) > 0:
 			refused_ballots = {
 				'refused': self.utils.to_boolean(data[0]),
-				'count': self.utils.to_num(data[1])
+				'total': self.utils.to_num(data[1])
 			}
 
 		return refused_ballots
 
+
 	def build_irregularities_object(self, data):
 		irregularities = {
-			'moreThanOneVote':{
-				'attempted': data[0],
-				'allowedToVote': data[1]
+			'anyoneTriedToVoteMoreThanOnce':{
+				'attempted': self.utils.to_boolean(data[0]),
+				'allowedToVote': self.utils.to_boolean(data[1])
 			},
 			'photographedBallot': self.utils.to_boolean(data[2]),
 			'personInsertedMoreThanOneBallot': self.utils.to_boolean(data[3]),
@@ -132,8 +150,8 @@ class DiaImporter(object):
 			'politicalPropagandaInsideThePollingStation': self.utils.to_boolean(data[6]),
 			'moreThanOnePersonBehindTheBooth': self.utils.to_boolean(data[7]),
 			'pollingStationClosedAtAnyPointDuringDay': self.utils.to_boolean(data[8]),
-			'caseVotingOutsideTheCabin': self.utils.to_boolean(data[9]),
-			'accidents': self.utils.to_boolean(data[10])
+			'votingOutsideTheBooths': self.utils.to_boolean(data[9]),
+			'incidents': self.utils.to_boolean(data[10])
 		}
 
 		return irregularities
@@ -148,3 +166,66 @@ class DiaImporter(object):
 		}
 
 		return complaints
+
+
+	def build_voting_end_object(self, data):
+
+		voting_end = {
+			'time': data[0], # "When did voting process end?"
+			'votersStillInQueue':{ #FIXME: Weird Boolean
+				'stillInQueue': self.utils.to_boolean(data[1]), # "Were there any people waiting in queue when voting center/station closed?"
+				'allowedToVote':  self.utils.to_boolean(data[2]), # "Were they allowed to vote?"
+			},
+			'countingStartTime': data[3], # "When did the counting begin?"
+			'unauthorizedPersons':{ 
+				'presentDuringCounting': self.utils.to_boolean(data[4]), # "Were there any unauthorized persons present during counting?"
+				'who': data[5], # "If yes, who"
+			},
+			'observersHadClearViewOfProcedure': self.utils.to_boolean(data[6]), # "Could the observer have a clear view of the procedures?"
+			'securitySeals':{
+				'checked': self.utils.to_boolean(data[7]), # "Were the security seals checked before opening the ballot box?"
+				'intact': self.utils.to_boolean(data[8]), # "Were the security seals intact?"
+				'verifiedAndRegistered': self.utils.to_boolean(data[12]) # "Were the security seals verified and registered?"
+			},
+			'votersListSignatures':{
+				'countedAndRecorded': self.utils.to_boolean(data[9]), # "Were the signatures in the voters list counted and recorded?"
+				'total':  self.utils.to_num(data[10]), # "Number of signature in the voters' list (how many persons voted)?"
+			},
+			'unusedBallots':{
+				'countedAndRegistered': self.utils.to_boolean(data[11]) # "Were the unused ballots counted and registered?"
+			},
+			'votingMaterialsMovedAside': self.utils.to_boolean(data[13]) # "Were the voting materials moved aside (unused/damaged/refused ballots, stamps, voters' list, markers, pencils)?"
+		}
+
+		return voting_end
+
+
+	def build_counting_ballots_object(self, data):
+		counting_ballots = {}
+
+		if len(data) > 0:
+			counting_ballots = {
+				'total': self.utils.to_num(data[0]), # "Total number of ballots in the ballot box"
+				'invalid':{
+					'total': self.utils.to_num(data[1]), # "How many invalid ballots were in the ballot box?"
+					'movedAside': self.utils.to_boolean(data[2]) # "Were the invalid ballots moved aside?"
+				}, 
+				'inTransparentBag': self.utils.to_boolean(data[3]) # "After counting the ballots, were they placed in a transparent plastic bag?"
+			}
+
+		return counting_ballots
+
+
+	def	build_counting_summary_object(self, data):
+		counting_summary = {
+			'justDecisionOnDubiousBallots': self.utils.translate_frequency(data[0]), # "Was the decision on dubious ballots just?"
+			'disagreementsRecorded': self.utils.translate_frequency(data[1]), # "In case of disagreement, were they written in the book?"
+			'countingFinishTime': data[2] , # "When did the counting finish?"
+			'oppositions':{
+				'fromRepresentativeOrObserver': self.utils.to_boolean(data[3]), # "Did any representative or observer oppose the results for this polling station?"
+				'who': data[4] # "If yes, who"
+			},
+			'comments': data[5] # "Other comments: (If there is a discrepancy between the number of signatures and ballots in the box, explain why?)"
+		}
+
+		return counting_summary

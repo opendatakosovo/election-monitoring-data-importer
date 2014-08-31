@@ -5,7 +5,12 @@ class Utils(object):
 		''' Converting string to boolean
 		:param arg: string argument to convert to boolean 
 		'''
-		if arg == "PO" or arg == "TRUE":
+		if arg == True:
+			return True	
+		elif arg == False:
+			return False
+
+		elif arg == "PO" or arg == "TRUE":
 			return True
 		elif arg == "JO" or arg == "FALSE":
 			return False 
@@ -16,7 +21,7 @@ class Utils(object):
 			return True
 
 		else:
-			return arg
+			return ''
 
 	@staticmethod
 	def to_boolean_second(arg):
@@ -26,14 +31,18 @@ class Utils(object):
 			3 -> True/True
 		:param arg: string argument to convert to boolean 
 		'''
-		if arg == "1":
+		if arg == True:
+			return True	
+		elif arg == False:
 			return False
 
+		elif arg == "1":
+			return False
 		elif arg == "2":
 			return True
 
 		else:
-			return arg	
+			return ''
 
 	@staticmethod
 	def to_num(s):
@@ -46,29 +55,67 @@ class Utils(object):
 			try:
 				return float(s)
 			except:
-				return s
+				return ''
+
+		return ''
 	   
 	@staticmethod
 	def translate_frequency(term):
-		''' Translate frequence term into english. e.g. 'Gjithmone' is 'always'
+		''' Translate frequence term into english. e.g. 'Gjithmone' is 'Always'
 		'''
 		# Use startswith because we don't want to deal with encoding issues (e umlaut).
 		# There is probably a more elegant way to deal with this.
 		if term.startswith('Gjithmon') or term == '1':
-			return 'always'
+			return 'Always'
 
 		elif term.startswith('Nganj') or term == '2':
-			return 'sometimes'
+			return 'Sometimes'
 
 		elif term.startswith('Rrall') or term == '3':
-			return 'rarely'
+			return 'Rarely'
 
 		elif term.startswith('Aspak') or term == '4':
-			return 'never'
+			return 'Never'
 
 		else:
+			return ''
 
-			return term
+
+	@staticmethod
+	def to_counting_begin_time_range(arg):
+		if arg == '0':
+			return "Before 19:00"
+
+		elif arg == '1':
+			return "19:00 - 20:00"
+
+		elif arg == '2':
+			return "20:00 - 21:00"
+
+		elif arg == '3':
+			return "21:00 - 22:00"
+
+		else:
+			return ''
+
+
+	@staticmethod
+	def to_counting_finish_time_range(arg):
+		if arg == '0':
+			return "19:00 - 20:00"
+
+		elif arg == '1':
+			return "20:00 - 21:00"
+
+		elif arg == '2':
+			return "21:00 - 23:00"
+
+		elif arg == '3' or arg == '4':
+			return "After 23:00"
+
+		else:
+			return ''
+
 
 	@staticmethod
 	def get_csv_filepath(organization, election_year, election_type, election_round):
