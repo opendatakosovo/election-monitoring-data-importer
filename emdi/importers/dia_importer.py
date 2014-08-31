@@ -1,7 +1,11 @@
+import abc
+import csv
+from bson import ObjectId
 from pymongo import MongoClient
 from slugify import slugify
 
 class DiaImporter(object):
+	__metaclass__ = abc.ABCMeta
 
 	def __init__(self, csv_filepath, collection_name, utils):
 		self.collection_name = collection_name
@@ -16,6 +20,148 @@ class DiaImporter(object):
 		# 	AttributeError: 'module' object has no attribute 'to_boolean'
 		#	WHY?!?!
 		self.utils = utils
+
+
+	def execute(self):
+		'''
+		Reads the DiA election monitoring CSV file.
+		Creates Mongo document for each observation entry.
+		Stores generated JSON documents.
+		'''
+		
+		num_of_created_docs = 0
+
+		with open(self.csv_filepath, 'rb') as csvfile:
+			reader = csv.reader(csvfile)
+			# Skip the header
+			next(reader, None)
+
+			# Iterate through the rows, retrieve desired values.
+			for row in reader:
+
+				# Build JSON objects.
+				# The methods that build the data object are implemted in this class
+				# The methods that build the JSON object are implmenet in the super-class
+
+				# Build 'votingCenter' object.
+				voting_center_data = self.build_voting_center_data(row)
+				voting_center = self.build_voting_center_object(voting_center_data )
+
+				# Build 'onArrival' object.
+				on_arrival_data = self.build_on_arrival_data(row)
+				on_arrival = self.build_on_arrival_object(on_arrival_data)
+
+				# Build 'preparation' object.
+				preparation_data = self.build_preparation_data(row)
+				missing_materials_data = self.build_missing_materials_data(row)
+				preparation = self.build_preparation_object(preparation_data, missing_materials_data)
+
+				# Build 'voting.process' object.
+				voting_process_data = self.build_voting_process_data(row)
+				observers_data = self.build_voting_observers_data(row)
+				refused_ballots_data = self.build_refused_ballots_data(row)
+				voting_process = self.build_voting_process_object(
+					voting_process_data,
+					observers_data,
+					refused_ballots_data)
+				
+				# Build 'voting.irregularities' object.
+				irregularities_data = self.build_irregularities_data(row)
+				irregularities = self.build_irregularities_object(irregularities_data)
+
+				# Build 'voting.complaints' object.
+				complaints_data = self.build_complaints_data(row)
+				complaints = self.build_complaints_object(complaints_data)
+
+				# Build 'voting.end' object.
+				voting_end_data = self.build_voting_end_data(row)
+				voting_end = self.build_voting_end_object(voting_end_data)
+
+				# Build 'counting.ballots' object.
+				counting_ballots_data = self.build_counting_ballots_data(row)
+				counting_ballots = self.build_counting_ballots_object(counting_ballots_data)
+
+				# Build 'counting.summary' object.
+				counting_summary_data = self.build_counting_summary_data(row)
+				counting_summary = self.build_counting_summary_object(counting_summary_data)
+
+				results = self.build_results_object(row)
+
+				# Build observation documents
+				observation = {
+					'_id': str(ObjectId()),
+					'votingCenter': voting_center,
+					'onArrival': on_arrival,
+					'preparation': preparation,
+					'voting': {
+						'process': voting_process,
+						'irregularities': irregularities,				
+						'complaints': complaints,
+						'concludes': voting_end
+					},
+					'counting':{
+						'ballots': counting_ballots,
+						'summary': counting_summary
+					},
+					'results': results
+				}
+
+				# Insert document
+				self.mongo.kdi[self.collection_name].insert(observation)
+				num_of_created_docs = num_of_created_docs + 1
+			# End for
+
+		return num_of_created_docs
+
+
+	@abc.abstractmethod
+	def build_on_arrival_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_on_arrival_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_preparation_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_missing_materials_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_voting_process_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_refused_ballots_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_voting_observers_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_irregularities_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_complaints_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_voting_end_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_counting_ballots_data(self, row):
+		return
+
+	@abc.abstractmethod
+	def build_results_object(self, row):
+		return
+
 
 	def build_on_arrival_object(self, data):
 		on_arrival = {

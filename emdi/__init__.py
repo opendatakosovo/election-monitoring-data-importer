@@ -47,9 +47,9 @@ def import_data():
 				importer = DiaImporter2014(csv_filepath, collection_name, utils)
 
 		# Run the importer
-		rsp = importer.run()
+		num_of_docs_created = importer.execute()
 
-		print 'Done. Imported %s observation documents.' % rsp
+		print 'Done. Imported %s observation documents.' % num_of_docs_created
 
 	else:
 		print 'No CSV data file exists for those given arguments.'

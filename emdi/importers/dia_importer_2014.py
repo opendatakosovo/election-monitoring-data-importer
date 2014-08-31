@@ -1,120 +1,30 @@
-import csv
-from bson import ObjectId
-from slugify import slugify
-
+import abc
 from dia_importer import DiaImporter
 
+# FIXME: Passing utils as constructor argument because for some reason when we import it from DiaImporter2013 we get this error message:
+# 	AttributeError: 'module' object has no attribute 'to_boolean'
+#	WHY?!?!
+#from emdi import utils
+
+''' UNPROCESSED DATA - START '''
+
+# VOTING ENDS - COUNTING STARTS
+'''			
+- 49. Were the damaged or refused ballots counted and recorded?"
+'''	
+
+# DATA ON COUNTING OF BALLOTS 
+'''	
+- Conditional ballots (valid only for dual polling stations):
+- Number of signatures in the conditional voting list.
+- Were the opened envelopes counted separately and were they marked as "invalid"
+
+'''
+''' UNPROCESSED DATA - END '''
 class DiaImporter2014(DiaImporter):
 
 	def __init__(self, csv_filepath, collection_name, utils):
 		DiaImporter.__init__(self, csv_filepath, collection_name, utils)
-
-	def run(self):
-		'''
-		Reads the DiA election monitoring CSV file.
-		Creates Mongo document for each observation entry.
-		Stores generated JSON documents.
-		'''
-		
-		num_of_created_docs = 0
-
-		with open(self.csv_filepath, 'rb') as csvfile:
-			reader = csv.reader(csvfile)
-			# Skip the header
-			next(reader, None)
-
-			# Iterate through the rows, retrieve desired values.
-			for row in reader:
-
-				''' UNPROCESSED DATA - START '''
-
-				# VOTING ENDS - COUNTING STARTS
-				'''			
-				- 49. Were the damaged or refused ballots counted and recorded?"
-				'''	
-
-				# DATA ON COUNTING OF BALLOTS 
-				'''	
-				- Conditional ballots (valid only for dual polling stations):
-				- Number of signatures in the conditional voting list.
-				- Were the opened envelopes counted separately and were they marked as "invalid"
-
-				'''
-				''' UNPROCESSED DATA - END '''
-
-				# Build JSON objects.
-				# The methods that build the data object are implemted in this class
-				# The methods that build the JSON object are implmenet in the super-class
-
-				# Build 'votingCenter' object.
-				voting_center_data = self.build_voting_center_data(row) # Implementation in this class
-				voting_center = self.build_voting_center_object(voting_center_data ) # Implementation in the super-class
-
-				# Build 'onArrival' object.
-				on_arrival_data = self.build_on_arrival_data(row) # Implementation in this class
-				on_arrival = self.build_on_arrival_object(on_arrival_data) # Implementation in the super-class
-
-				# Build 'preparation' object.
-				preparation_data = self.build_preparation_data(row) # Implementation in this class
-				missing_materials_data = self.build_missing_materials_data(row) # Implementation in this class
-				preparation = self.build_preparation_object(preparation_data, missing_materials_data) # Implementation in the super-class
-
-				# Build 'voting.process' object.
-				voting_process_data = self.build_voting_process_data(row) # Implementation in this class
-				observers_data = self.build_voting_observers_data(row) # Implementation in this class
-				refused_ballots_data = self.build_refused_ballots_data(row) # Implementation in this class
-				voting_process = self.build_voting_process_object(
-					voting_process_data,
-					observers_data,
-					refused_ballots_data)  # Implementation in the super-class
-				
-				# Build 'voting.irregularities' object.
-				irregularities_data = self.build_irregularities_data(row) # Implementation in this class
-				irregularities = self.build_irregularities_object(irregularities_data) # Implementation in the super-class
-
-				# Build 'voting.complaints' object.
-				complaints_data = self.build_complaints_data(row) # Implementation in this class
-				complaints = self.build_complaints_object(complaints_data) # Implementation in the super-class
-
-				# Build 'voting.end' object.
-				voting_end_data = self.build_voting_end_data(row)  # Implementation in this class
-				voting_end = self.build_voting_end_object(voting_end_data)  # Implementation in the super-class
-
-				# Build 'counting.ballots' object.
-				counting_ballots_data = self.build_counting_ballots_data(row)  # Implementation in this class
-				counting_ballots = self.build_counting_ballots_object(counting_ballots_data) # Implementation in the super-class
-
-				# Build 'counting.summary' object.
-				counting_summary_data = self.build_counting_summary_data(row)  # Implementation in this class
-				counting_summary = self.build_counting_summary_object(counting_summary_data) # Implementation in the super-class
-
-				results = self.build_results_object(row) # Implementation in this class
-
-				# Build observation documents
-				observation = {
-					'_id': str(ObjectId()),
-					'votingCenter': voting_center,
-					'onArrival': on_arrival,
-					'preparation': preparation,
-					'voting': {
-						'process': voting_process,
-						'irregularities': irregularities,				
-						'complaints': complaints,
-						'concludes': voting_end
-					},
-					'counting':{
-						'ballots': counting_ballots,
-						'summary': counting_summary
-					},
-					'results': results
-				}
-
-				# Insert document
-				self.mongo.kdi[self.collection_name].insert(observation)
-				num_of_created_docs = num_of_created_docs + 1
-			# End for
-
-		return num_of_created_docs
 
 
 	def build_voting_center_data(self, row):

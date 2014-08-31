@@ -1,7 +1,4 @@
-import csv
-from bson import ObjectId
-from slugify import slugify
-
+import abc
 from dia_importer import DiaImporter
 
 # FIXME: Passing utils as constructor argument because for some reason when we import it from DiaImporter2013 we get this error message:
@@ -9,147 +6,45 @@ from dia_importer import DiaImporter
 #	WHY?!?!
 #from emdi import utils
 
+''' UNPROCESSED DATA - START '''
+
+'''
+additional_comments = row[134]	#KomShtese
+'''
+
+# VOTING PROCESS END - COUNTING STARTS
+'''
+row[95], # PM11NVL: WHAT'S THIS? whats_number_of_voters_in_that_polling_station
+row[98] # PM14PSH: #FIXME: did_they_count_and_register_used_ballots??"
+'''
+
+'''
+pdk_observers = row[77] #column name PM05-PDK	
+ldk_observers = row[78] #column name PM05-LDK
+lvv_observers = row[79] #column name PM05-LVV	
+aak_observers = row[80] #column name PM05-AAK
+akr_observers = row[81] #column name PM05-AKR
+
+other_parties_observers_1 = row[82] #column name PM05-TJ1
+other_parties_observers_2 = row[83] #column name PM05-TJ2
+other_parties_observers_3 = row[84] #column name PM05-TJ3
+
+other_parties = [other_parties_observers_1, other_parties_observers_2, other_parties_observers_3]
+other_parties = filter(None, other_parties)
+
+ngo_observers = row[85] #column name PM05-OJQ
+media_observers = row[86] #column name PM05-MED
+international_observers = row[87] #column name PM05-VZH
+other_observers = row[88] #column name PM05-TJE
+'''
+
+''' UNPROCESSED DATA - END '''
+
+
 class DiaImporter2013(DiaImporter):
 
 	def __init__(self, csv_filepath, collection_name, utils):
 		DiaImporter.__init__(self, csv_filepath, collection_name, utils)
-
-
-	def run(self):
-		'''
-		Reads the KDI local election monitoring CSV file.
-		Creates Mongo document for each observation entry.
-		Stores generated JSON documents.
-		'''
-		
-		num_of_created_docs = 0
-
-		with open(self.csv_filepath, 'rb') as csvfile:
-			reader = csv.reader(csvfile)
-			# Skip the header
-			next(reader, None)
-
-			# Iterate through the rows, retrieve desired values.
-			for row in reader:
-				
-				''' UNPROCESSED DATA - START '''
-
-				'''
-				additional_comments = row[134]	#KomShtese
-				'''
-
-				# DURING THE ARRIVAL OF THE VOTING MATERIAL
-				'''
-				number_of_accepted_ballots = row[24] # column name:P06NFP
-				number_of_voters_in_voting_station_list = row[25] # column name: P07VNL
-				number_of_voting_cabins=row[26] # column name:P08NKV
-				votingbox_shown_empty=row[27] # column name:P09TKZ
-				closed_with_safetystrip = row[28] # column name:P10SHS
-				did_they_register_serial_number_of_strips = row[29] # column name:P11NRS
-				cabins_provided_voters_safety_and_privancy = row[30] # column name:P12KFV
-				'''	
-
-				# VOTING PROCESS END - COUNTING STARTS
-				'''
-				row[95], # PM11NVL: WHAT'S THIS? whats_number_of_voters_in_that_polling_station
-				row[98] # PM14PSH: #FIXME: did_they_count_and_register_used_ballots??"
-				'''
-
-				'''
-				pdk_observers = row[77] #column name PM05-PDK	
-				ldk_observers = row[78] #column name PM05-LDK
-				lvv_observers = row[79] #column name PM05-LVV	
-				aak_observers = row[80] #column name PM05-AAK
-				akr_observers = row[81] #column name PM05-AKR
-
-				other_parties_observers_1 = row[82] #column name PM05-TJ1
-				other_parties_observers_2 = row[83] #column name PM05-TJ2
-				other_parties_observers_3 = row[84] #column name PM05-TJ3
-
-				other_parties = [other_parties_observers_1, other_parties_observers_2, other_parties_observers_3]
-				other_parties = filter(None, other_parties)
-
-				ngo_observers = row[85] #column name PM05-OJQ
-				media_observers = row[86] #column name PM05-MED
-				international_observers = row[87] #column name PM05-VZH
-				other_observers = row[88] #column name PM05-TJE
-				'''
-
-				''' UNPROCESSED DATA - END '''
-
-
-				# Build JSON objects.
-				# The methods that build the data object are implemted in this class
-				# The methods that build the JSON object are implmenet in the super-class
-
-				# Build 'votingCenter' object.
-				voting_center_data = self.build_voting_center_data(row) # Implementation in this class
-				voting_center = self.build_voting_center_object(voting_center_data ) # Implementation in the super-class
-
-				# Build 'onArrival' object.
-				on_arrival_data = self.build_on_arrival_data(row) # Implementation in this class
-				on_arrival = self.build_on_arrival_object(on_arrival_data) # Implementation in the super-class
-
-				# Build 'preparation' object.
-				preparation_data = self.build_preparation_data(row) # Implementation in this class
-				missing_materials_data = self.build_missing_materials_data(row) # Implementation in this class
-				preparation = self.build_preparation_object(preparation_data, missing_materials_data) # Implementation in the super-class
-
-				# Build 'voting.process' object.
-				voting_process_data = self.build_voting_process_data(row) # Implementation in this class
-				observers_data = self.build_voting_observers_data(row) # Implementation in this class
-				refused_ballots_data = self.build_refused_ballots_data(row) # Implementation in this class
-				voting_process = self.build_voting_process_object(
-					voting_process_data,
-					observers_data,
-					refused_ballots_data) # Implementation in the super-class
-
-				# Build 'voting.irregularities' object.
-				irregularities_data = self.build_irregularities_data(row) # Implementation in this class
-				irregularities = self.build_irregularities_object(irregularities_data) # Implementation in the super-class
-
-				# Build 'voting.complaints' object.
-				complaints_data = self.build_complaints_data(row) # Implementation in this class
-				complaints = self.build_complaints_object(complaints_data) # Implementation in the super-class
-
-				# Build 'voting.end' object.
-				voting_end_data = self.build_voting_end_data(row)  # Implementation in this class
-				voting_end = self.build_voting_end_object(voting_end_data)  # Implementation in the super-class
-
-				# Build 'counting.ballots' object.
-				counting_ballots_data = self.build_counting_ballots_data(row)  # Implementation in this class
-				counting_ballots = self.build_counting_ballots_object(counting_ballots_data) # Implementation in the super-class
-
-				# Build 'counting.summary' object.
-				counting_summary_data = self.build_counting_summary_data(row)  # Implementation in this class
-				counting_summary = self.build_counting_summary_object(counting_summary_data) # Implementation in the super-class
-
-				results = self.build_results_object(row) # Implementation in this class
-
-				observation = {
-					'_id': str(ObjectId()),
-					'votingCenter': voting_center,
-					'onArrival': on_arrival,
-					'preparation': preparation,
-					'voting': {
-						'process': voting_process,
-						'irregularities': irregularities,				
-						'complaints': complaints,
-						'concludes': voting_end
-					},
-					'counting':{
-						'ballots': counting_ballots,
-						'summary': counting_summary
-					},
-					'results': results
-				} 
-			
-				# Insert document
-				self.mongo.kdi[self.collection_name].insert(observation)
-				num_of_created_docs = num_of_created_docs + 1
-
-		return num_of_created_docs
-
 
 	def build_voting_center_data(self, row):
 		data = [
