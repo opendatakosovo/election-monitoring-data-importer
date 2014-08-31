@@ -122,9 +122,10 @@ class DiaImporter2013(DiaImporter):
 				missing_materials_data = self.build_missing_materials_data(row) # Implementation in this class
 				preparation = self.build_preparation_object(preparation_data, missing_materials_data) # Implementation in the super-class
 
-				# Different implementation required to build the data object for each sub-class.
-				# So in this case, we don't create a generic data object creation method in the super-class
-				voting_process = self.build_voting_process_object(row) # Implementation in this class
+				voting_process_data = self.build_voting_process_data(row) # Implementation in this class
+				observers_data = self.build_observers_data(row) # Implementation in this class
+				refused_ballots_data = self.build_refused_ballots_data(row) # Implementation in this class
+				voting_process = self.build_voting_process_object(voting_process_data, observers_data, refused_ballots_data) # Implementation in the super-class
 
 				irregularities_data = self.build_irregularities_data(row) # Implementation in this class
 				irregularities = self.build_irregularities_object(irregularities_data) # Implementation in the super-class
@@ -148,10 +149,9 @@ class DiaImporter2013(DiaImporter):
 					'closedWithSafetyStrip':self.utils.to_boolean( closed_with_safetystrip), 
 					'registeredStrips': self.utils.to_boolean(did_they_register_serial_number_of_strips), 
 					'cabinsSafetyAndPrivacy': self.utils.to_boolean(cabins_provided_voters_safety_and_privancy),
-					'votingProcess': voting_process,
-					'irregularities': irregularities,				
-					'complaints': complaints,
-					'countingProcess':{	
+					'process':{
+						'voting': voting_process,
+						'counting': {	
 							'whenVotingProcessFinished':when_voting_process_finished,
 							'anyoneWaitingWhenPollingStationClosed': self.utils.to_boolean(anyone_waiting_when_polling_station_closed),
 							'didTheyAllowThemToVote': self.utils.to_boolean(did_they_allow_them_to_vote),
@@ -182,7 +182,10 @@ class DiaImporter2013(DiaImporter):
 							'didTheyCountAndRegisterUsedBallots': self.utils.to_boolean(did_they_count_and_register_used_ballots), #FIXME: Who is they? 
 							'didTheyVerifyAndRegisterSafetyStrip': self.utils.to_boolean(did_they_verify_and_register_safety_strips), #FIXME: Who is they? 
 							'votingMaterialsSetAside': self.utils.to_boolean(voting_materials_set_aside)
-						},
+						}
+					},
+					'irregularities': irregularities,				
+					'complaints': complaints,
 					'ballots':{
 						'municipalAssembly':{
 							'total': self.utils.to_num(total_ballots_mae),
@@ -265,45 +268,61 @@ class DiaImporter2013(DiaImporter):
 		return data;
 
 
-	def build_voting_process_object(self, row):
-		voting_process = {
-			'whenVotingProcessStarted' : row[31], # Column name: PV1KHV
-			'observersPresent':{
-					'pdk': self.utils.to_boolean(row[32]), # Column name: PDK
-					'ldk': self.utils.to_boolean(row[33]), # Column name LDK
-					'lvv': self.utils.to_boolean(row[34]), # Column name LVV	
-					'aak': self.utils.to_boolean(row[35]), # Column name AAK
-					'akr': self.utils.to_boolean(row[36]), # Column name AKR
-					'otherParties' : filter(None, row[37:40]), # ParTj01, ParTj02, ParTj03
-					'ngo': self.utils.to_boolean(row[40]), # OJQ
-					'media': self.utils.to_boolean(row[41]), # Media
-					'international': self.utils.to_boolean(row[42]), # VzhND
-					'other': row[43] # VzhTjere
-			},
-			'voters':{
-				'ultraVioletControl': self.utils.translate_frequency(row[44]), # Column name: PV03UVL
-				'identifiedWithDocument': self.utils.translate_frequency(row[45]), # Column name: PV04IDK
-				'fingerSprayed': self.utils.translate_frequency(row[46]), # Column name: PV05GSH
-				'sealedBallot': self.utils.translate_frequency(row[47]), # Column name: PV06VUL
-				'howManyVotedBy':{
-					'tenAM': self.utils.to_num(row[48]), # Column name: PV07-10
-					'onePM': self.utils.to_num(row[49]), # Column name: PV07-13
-					'fourPM': self.utils.to_num(row[50]), # Column name: PV07-16
-					'sevenPM': self.utils.to_num(row[51]) # Column name: PV07-19
-				},
-				'notInVotersList' : self.utils.to_num(row[52]),  #column name:PV08ELV
-				'conditional' : self.utils.to_num(row[53]), #column name: PV09NVK
-				'assisted' : self.utils.to_num(row[54]), #column name: PV10VAS
-				'refusedBallot' : {
-					'refused': self.utils.to_boolean(row[56]), #column name: PV12_Ref
-					'count': self.utils.to_num(row[57]) #column name: PV12IFPo
-				}
-			},
-			'atLeastThreePscMembersPresentInPollingStation' : self.utils.to_boolean(row[55]), #column name: PV11-3AN
-			'comments' : row[58]  # column name: ProcVotKom
-		}
+	def build_voting_process_data(self, row):
+		voting_process = [
+			row[31], # Column name: PV1KHV
+			row[44], # Column name: PV03UVL
+			row[45], # Column name: PV04IDK
+			row[46], # Column name: PV05GSH
+			row[47], # Column name: PV06VUL
+			row[48], # Column name: PV07-10
+			row[49], # Column name: PV07-13
+			row[50], # Column name: PV07-16
+			row[51], # Column name: PV07-19
+			row[52], # Column name: PV08ELV
+			row[53], # Column name: PV09NVK
+			row[54], # Column name: PV10VAS
+			row[55], # Column name: PV11-3AN
+			row[58]  # Column name: ProcVotKom
+		]
 
 		return voting_process
+
+
+	def build_refused_ballots_data(self, row):
+		data = [
+			row[56], # Column name: PV12_Ref
+			row[57]  # Column name: PV12IFPo
+		]
+
+		return data
+
+
+	def build_observers_data(self, row):
+		data = [
+			'PDK' if self.utils.to_boolean(row[32]) else None,  # Column name: PDK
+			'LDK' if self.utils.to_boolean(row[33]) else None, # Column name LDK
+			'LVV' if self.utils.to_boolean(row[34]) else None, # Column name LVV
+			'AAK' if self.utils.to_boolean(row[35]) else None, # Column name AAK
+			'AKR' if self.utils.to_boolean(row[36]) else None,  # Column name AKR
+			row[37].upper() if row[37] != None else None, # ParTj01
+			row[38].upper() if row[38] != None else None, # ParTj02
+			row[39].upper() if row[39] != None else None, # ParTj03
+			'NGO' if self.utils.to_boolean(row[40]) else None, # OJQ
+			'Media' if self.utils.to_boolean(row[41]) else None, # Media
+			'International Observers' if self.utils.to_boolean(row[42]) else None  # VzhND
+		]
+
+ 		# How to handle Others?
+		row[43] # VzhTjere
+
+		# e.g. observation with other parties:
+		# db.localelectionsfirstround2013.findOne({'pollingStation.number':'1804E'})
+
+		# e.g. others:
+		# db.localelectionsfirstround2013.findOne({'pollingStation.number':'1837E'})
+
+		return filter(None, data)
 
 
 	def build_irregularities_data(self, row):

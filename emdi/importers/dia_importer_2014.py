@@ -37,9 +37,10 @@ class DiaImporter2014(DiaImporter):
 				missing_materials_data = self.build_missing_materials_data(row) # Implementation in this class
 				preparation = self.build_preparation_object(preparation_data, missing_materials_data) # Implementation in the super-class
 
-				# Different implementation required to build the data object for each sub-class.
-				# So in this case, we don't create a generic data object creation method in the super-class
-				voting_process = self.build_voting_process_object(row) # Implementation in this class
+				voting_process_data = self.build_voting_process_data(row) # Implementation in this class
+				observers_data = self.build_observers_data(row) # Implementation in this class
+				refused_ballots_data = self.build_refused_ballots_data(row) # Implementation in this class
+				voting_process = self.build_voting_process_object(voting_process_data, observers_data, refused_ballots_data) # Implementation in the super-class
 
 				irregularities_data = self.build_irregularities_data(row) # Implementation in this class
 				irregularities = self.build_irregularities_object(irregularities_data) # Implementation in the super-class
@@ -52,9 +53,12 @@ class DiaImporter2014(DiaImporter):
 					'_id': str(ObjectId()),
 					'pollingStation': polling_station,
 					'preparation': preparation,
-					'votingProcess': voting_process,
+					'process': {
+						'voting': voting_process,
+						'counting': {}
+					},
 					'irregularities': irregularities,				
-					'complaints': complaints,
+					'complaints': complaints
 				}
 
 				# Insert document
@@ -93,63 +97,41 @@ class DiaImporter2014(DiaImporter):
 
 
 	def build_missing_materials_data(self, row):
-		data = [
-			row[15],
-			row[16],
-			row[17],
-			row[18],
-			row[19],
-			row[20],
-			row[21],
-			row[22],
-			row[23]
-		]
+		data = []
 
 		return data
 
 
-	def build_voting_process_object(self, row):
-		voting_process = {
-			'whenVotingProcessStarted' : row[31], # Column name
-			# IN FORM BUT NOT STORED
-			#'observersPresent':{
-			#		'pdk': self.utils.to_boolean(row[32]), # Column name
-			#		'ldk': self.utils.to_boolean(row[33]), # Column name
-			#		'lvv': self.utils.to_boolean(row[34]), # Column name
-			#		'aak': self.utils.to_boolean(row[35]), # Column name
-			#		'akr': self.utils.to_boolean(row[36]), # Column name
-			#		'otherParties' : filter(None, row[37:40]), #
-			#		'ngo': self.utils.to_boolean(row[40]), # 
-			#		'media': self.utils.to_boolean(row[41]), #
-			#		'international': self.utils.to_boolean(row[42]), #
-			#		'other': row[43] # 
-			#},
-			'voters':{
-				'ultraVioletControl': self.utils.translate_frequency(row[22]), # Column name
-				'identifiedWithDocument': self.utils.translate_frequency(row[23]), # Column name
-				'fingerSprayed': self.utils.translate_frequency(row[24]), # Column name
-				'sealedBallot': self.utils.translate_frequency(row[25]), # Column name
-				'howManyVotedBy':{
-					'tenAM': self.utils.to_num(row[26]), # Column name
-					'onePM': self.utils.to_num(row[27]), # Column name
-					'fourPM': self.utils.to_num(row[28]), # Column name
-					'sevenPM': self.utils.to_num(row[29]) # Column name
-				},
-				'notInVotersList' : self.utils.to_num(row[30]),  #column name
-				'conditional' : self.utils.to_num(row[31]), #column name
-				'assisted' : self.utils.to_num(row[32]), #column name
-				# NOT IN FORM
-				#'refusedBallot' : {
-				#	'refused': self.utils.to_boolean(row[56]), #column name
-				#	'count': self.utils.to_num(row[57]) #column name 
-				#}
-			},
-			'atLeastThreePscMembersPresentInPollingStation' : self.utils.to_boolean(row[33]), #column name
-			# IN FORM BUT NOT STORED
-			#'comments' : row[58]  # column name
-		}
+	def build_voting_process_data(self, row):
+		voting_process = [
+			row[20],
+			row[21],
+			row[22],
+			row[23],
+			row[24],
+			row[25],
+			row[26],
+			row[27],
+			row[28],
+			row[29],
+			row[30],
+			row[31],
+			row[32],
+			'' # Comments. In Form but not stored.
+		]
 
 		return voting_process
+
+	def build_refused_ballots_data(self, row):
+		data = []
+
+		return data
+
+
+	def build_observers_data(self, row):
+		data = []
+
+		return data
 
 
 	def build_irregularities_data(self, row):
@@ -173,9 +155,9 @@ class DiaImporter2014(DiaImporter):
 
 	def build_complaints_data(self, row):
 		data = [
-			row[42], # Column name: PA10VAV
-			row[43], # Column name: PA11VMF
-			row[44]  #column name PA12PAA
+			row[42],
+			row[43],
+			row[44] 
 		]
 
 		return data

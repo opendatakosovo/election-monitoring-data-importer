@@ -49,23 +49,75 @@ class DiaImporter(object):
 				'total': self.utils.to_num(prep_data[4]),
 				'female': self.utils.to_num(prep_data[5])
 			},
-			'missingMaterials':{
-				'uvLamp': self.utils.to_boolean(missing_material_data[0]),
-				'invisibleInk':self.utils.to_boolean(missing_material_data[1]),
-				'votersList': self.utils.to_boolean(missing_material_data[2]),
-				'ballots': self.utils.to_boolean(missing_material_data[3]),
-				'stamp': self.utils.to_boolean(missing_material_data[4]),
-				'ballotBox':self.utils.to_boolean(missing_material_data[5]),
-				'pollBook': self.utils.to_boolean(missing_material_data[6]),
-				'votingBooth': self.utils.to_boolean(missing_material_data[7]),
-				'envelopesForConditionalVote': self.utils.to_boolean(missing_material_data[8])
-			}
+			'missingMaterials': self.build_missing_materials_object(missing_material_data)
 		}
 
 		return preparation
 
 
+	def build_missing_materials_object(self, data):
+		missing_material = {}
 
+		if len(data) > 0:
+			missing_materials = {
+				'uvLamp': self.utils.to_boolean(data[0]),
+				'invisibleInk':self.utils.to_boolean(data[1]),
+				'votersList': self.utils.to_boolean(data[2]),
+				'ballots': self.utils.to_boolean(data[3]),
+				'stamp': self.utils.to_boolean(data[4]),
+				'ballotBox':self.utils.to_boolean(data[5]),
+				'pollBook': self.utils.to_boolean(data[6]),
+				'votingBooth': self.utils.to_boolean(data[7]),
+				'envelopesForConditionalVote': self.utils.to_boolean(data[8])
+			}
+
+		return missing_material
+	
+
+	def build_voting_process_object(self, voting_process_data, observers_data, refused_ballots_data):
+		
+		observers = self.build_observers_object(observers_data)
+		refused_ballots = self.build_refused_ballots_object(refused_ballots_data)
+
+		voting_process = {
+			'pollingStationOpenTime' : voting_process_data[0],
+			'observers': observers,
+			'voters':{
+				'ultraVioletControl': self.utils.translate_frequency(voting_process_data[1]),
+				'identifiedWithDocument': self.utils.translate_frequency(voting_process_data[2]),
+				'fingerSprayed': self.utils.translate_frequency(voting_process_data[3]),
+				'sealedBallot': self.utils.translate_frequency(voting_process_data[4]),
+				'howManyVotedBy':{
+					'tenAM': self.utils.to_num(voting_process_data[5]),
+					'onePM': self.utils.to_num(voting_process_data[6]),
+					'fourPM': self.utils.to_num(voting_process_data[7]),
+					'sevenPM': self.utils.to_num(voting_process_data[8])
+				},
+				'notInVotersList' : self.utils.to_num(voting_process_data[9]),
+				'conditional' : self.utils.to_num(voting_process_data[10]),
+				'assisted' : self.utils.to_num(voting_process_data[11]),
+				'refusedBallots' : refused_ballots
+			},
+			'atLeastThreePscMembersPresentAtAllTimes' : self.utils.to_boolean(voting_process_data[12]),
+			'comments': voting_process_data[13]
+		}
+
+		return voting_process
+
+	def build_observers_object(self, data):
+		# This object is an array, so just return the given data array.
+		return data
+
+	def build_refused_ballots_object(self, data):
+		refused_ballots = {}
+
+		if len(data) > 0:
+			refused_ballots = {
+				'refused': self.utils.to_boolean(data[0]),
+				'count': self.utils.to_num(data[1])
+			}
+
+		return refused_ballots
 
 	def build_irregularities_object(self, data):
 		irregularities = {
